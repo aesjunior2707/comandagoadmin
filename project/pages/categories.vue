@@ -3,12 +3,12 @@
     <!-- Header -->
     <div class="flex justify-between items-center mb-8">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Categories Management</h1>
-        <p class="text-gray-600">Organize your menu items into categories</p>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Gestão de Categorias</h1>
+        <p class="text-gray-600">Organize os itens do seu cardápio em categorias.</p>
       </div>
       <button @click="showAddCategoryModal = true" class="btn-primary">
         <PlusIcon class="w-4 h-4 mr-2" />
-        Add Category
+        Adicionar Categoria
       </button>
     </div>
 
@@ -34,25 +34,15 @@
             </button>
           </div>
         </div>
-        
-        <p class="text-gray-600 text-sm mb-6 leading-relaxed">{{ category.description }}</p>
-        
+                
         <div class="flex justify-between items-center text-sm mb-6">
           <span class="text-gray-500">Created: {{ formatDate(category.createdAt) }}</span>
-          <span class="px-3 py-1 rounded-full text-xs font-medium"
-                :class="category.isActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'">
-            {{ category.isActive ? 'Active' : 'Inactive' }}
-          </span>
         </div>
 
         <div class="pt-4 border-t border-gray-100">
           <div class="flex gap-3">
-            <button @click="toggleCategoryStatus(category)" class="flex-1 text-sm py-2 px-3 rounded-lg font-medium transition-colors"
-                    :class="category.isActive ? 'bg-red-100 hover:bg-red-200 text-red-700' : 'bg-green-100 hover:bg-green-200 text-green-700'">
-              {{ category.isActive ? 'Deactivate' : 'Activate' }}
-            </button>
             <button @click="viewCategoryProducts(category)" class="flex-1 btn-secondary text-sm">
-              View Products
+               Produtos
             </button>
           </div>
         </div>

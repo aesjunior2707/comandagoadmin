@@ -3,17 +3,17 @@
     <!-- Header -->
     <div class="flex justify-between items-center mb-8">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Table History & Accounts</h1>
-        <p class="text-gray-600">View order history and manage customer accounts</p>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Histórico de Mesas e Contas</h1>
+        <p class="text-gray-600">Ver histórico de pedidos e gerenciar contas de clientes</p>
       </div>
       <div class="flex gap-3">
         <button @click="exportData" class="btn-secondary">
           <DocumentArrowDownIcon class="w-4 h-4 mr-2" />
-          Export
+          Exportar
         </button>
         <button @click="refreshData" class="btn-primary">
           <ArrowPathIcon class="w-4 h-4 mr-2" />
-          Refresh
+          Atualizar
         </button>
       </div>
     </div>
@@ -26,7 +26,7 @@
             <CurrencyDollarIcon class="w-6 h-6 text-green-600" />
           </div>
           <div>
-            <p class="text-sm font-medium text-gray-600 mb-1">Today's Revenue</p>
+            <p class="text-sm font-medium text-gray-600 mb-1">Faturamento de Hoje</p>
             <p class="text-2xl font-bold text-gray-900">R${{ todayRevenue }}</p>
           </div>
         </div>
@@ -38,32 +38,8 @@
             <ReceiptPercentIcon class="w-6 h-6 text-blue-600" />
           </div>
           <div>
-            <p class="text-sm font-medium text-gray-600 mb-1">Orders Today</p>
+            <p class="text-sm font-medium text-gray-600 mb-1">Pedidos de Hoje</p>
             <p class="text-2xl font-bold text-gray-900">{{ todayOrders }}</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="flex items-center space-x-4">
-          <div class="p-3 bg-yellow-100 rounded-lg">
-            <ClockIcon class="w-6 h-6 text-yellow-600" />
-          </div>
-          <div>
-            <p class="text-sm font-medium text-gray-600 mb-1">Avg Order Time</p>
-            <p class="text-2xl font-bold text-gray-900">{{ avgOrderTime }}min</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="flex items-center space-x-4">
-          <div class="p-3 bg-purple-100 rounded-lg">
-            <StarIcon class="w-6 h-6 text-purple-600" />
-          </div>
-          <div>
-            <p class="text-sm font-medium text-gray-600 mb-1">Avg Rating</p>
-            <p class="text-2xl font-bold text-gray-900">{{ avgRating }}</p>
           </div>
         </div>
       </div>
@@ -73,7 +49,7 @@
     <div class="card mb-8">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div class="form-group">
-          <label class="block text-sm font-medium text-gray-700 mb-2">Date Range</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Período de Datas</label>
           <select v-model="selectedDateRange" class="input-field">
             <option value="today">Today</option>
             <option value="week">This Week</option>
@@ -82,26 +58,17 @@
           </select>
         </div>
         <div class="form-group">
-          <label class="block text-sm font-medium text-gray-700 mb-2">Table</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Mesas</label>
           <select v-model="selectedTable" class="input-field">
             <option value="">All Tables</option>
             <option v-for="table in availableTables" :key="table" :value="table">Table {{ table }}</option>
           </select>
         </div>
         <div class="form-group">
-          <label class="block text-sm font-medium text-gray-700 mb-2">Waiter</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Garçons</label>
           <select v-model="selectedWaiter" class="input-field">
             <option value="">All Waiters</option>
             <option v-for="waiter in availableWaiters" :key="waiter" :value="waiter">{{ waiter }}</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
-          <select v-model="selectedStatus" class="input-field">
-            <option value="">All Status</option>
-            <option value="completed">Completed</option>
-            <option value="cancelled">Cancelled</option>
-            <option value="refunded">Refunded</option>
           </select>
         </div>
       </div>
@@ -111,7 +78,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       <div class="p-6 border-b border-gray-200">
         <div class="flex justify-between items-center">
-          <h2 class="text-xl font-semibold text-gray-900">Recent Orders</h2>
+          <h2 class="text-xl font-semibold text-gray-900">Pedidos Recentes</h2>
           <div class="flex items-center gap-2">
             <span class="text-sm text-gray-600">{{ filteredOrders.length }} orders</span>
           </div>

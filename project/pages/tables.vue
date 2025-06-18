@@ -3,12 +3,12 @@
     <!-- Header -->
     <div class="flex justify-between items-center mb-8">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Tables Management</h1>
-        <p class="text-gray-600">Manage your restaurant tables and their current status</p>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Gestão de Mesas</h1>
+        <p class="text-gray-600">Gerencie as mesas do seu restaurante e o status atual delas.</p>
       </div>
       <button @click="showAddTableModal = true" class="btn-primary">
         <PlusIcon class="w-4 h-4 mr-2" />
-        Add Table
+          Adicionar Mesa
       </button>
     </div>
 
@@ -20,7 +20,7 @@
             <div class="w-6 h-6 bg-green-600 rounded"></div>
           </div>
           <div>
-            <p class="text-sm font-medium text-gray-600 mb-1">Available</p>
+            <p class="text-sm font-medium text-gray-600 mb-1">Disponível</p>
             <p class="text-2xl font-bold text-gray-900">{{ availableTables }}</p>
           </div>
         </div>
@@ -32,32 +32,8 @@
             <div class="w-6 h-6 bg-yellow-600 rounded"></div>
           </div>
           <div>
-            <p class="text-sm font-medium text-gray-600 mb-1">Occupied</p>
+            <p class="text-sm font-medium text-gray-600 mb-1">Ocupado</p>
             <p class="text-2xl font-bold text-gray-900">{{ occupiedTables }}</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="flex items-center space-x-4">
-          <div class="p-3 bg-blue-100 rounded-lg">
-            <div class="w-6 h-6 bg-blue-600 rounded"></div>
-          </div>
-          <div>
-            <p class="text-sm font-medium text-gray-600 mb-1">Reserved</p>
-            <p class="text-2xl font-bold text-gray-900">{{ reservedTables }}</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="flex items-center space-x-4">
-          <div class="p-3 bg-red-100 rounded-lg">
-            <div class="w-6 h-6 bg-red-600 rounded"></div>
-          </div>
-          <div>
-            <p class="text-sm font-medium text-gray-600 mb-1">Out of Service</p>
-            <p class="text-2xl font-bold text-gray-900">{{ outOfServiceTables }}</p>
           </div>
         </div>
       </div>
@@ -113,7 +89,7 @@
     <div v-if="showAddTableModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div class="bg-white rounded-xl max-w-md w-full">
         <div class="p-8">
-          <h2 class="text-xl font-semibold text-gray-900 mb-6">Add New Table</h2>
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">Adicionar Mesa</h2>
           <form @submit.prevent="addTable" class="form-section">
             <div class="form-group">
               <label class="block text-sm font-medium text-gray-700 mb-2">Table Number</label>

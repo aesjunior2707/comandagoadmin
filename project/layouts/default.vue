@@ -182,12 +182,12 @@ const isMobile = ref(false)
 
 const navigation = [
   { name: 'Dashboard', href: '/', icon: ChartBarIcon },
-  { name: 'Restaurant Info', href: '/restaurant', icon: BuildingStorefrontIcon },
-  { name: 'Tables', href: '/tables', icon: TableCellsIcon, badge: '24' },
-  { name: 'Products', href: '/products', icon: CubeIcon, badge: '156' },
-  { name: 'Categories', href: '/categories', icon: TagIcon },
-  { name: 'Staff', href: '/waiters', icon: UserGroupIcon, badge: '8' },
-  { name: 'Order History', href: '/history', icon: ClockIcon }
+  { name: 'Informações do Restaurante', href: '/restaurant', icon: BuildingStorefrontIcon },
+  { name: 'Mesas', href: '/tables', icon: TableCellsIcon, badge: '24' },
+  { name: 'Produtos', href: '/products', icon: CubeIcon, badge: '156' },
+  { name: 'Categorias', href: '/categories', icon: TagIcon },
+  { name: 'Garçons', href: '/waiters', icon: UserGroupIcon, badge: '8' },
+  { name: 'Histórico de Pedido', href: '/history', icon: ClockIcon }
 ]
 
 const currentPageName = computed(() => {

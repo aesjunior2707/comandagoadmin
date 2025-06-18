@@ -6,8 +6,8 @@
         <div class="mx-auto h-16 w-16 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg">
           <BuildingStorefrontIcon class="h-8 w-8 text-white" />
         </div>
-        <h2 class="mt-6 text-3xl font-bold text-gray-900">Welcome back</h2>
-        <p class="mt-2 text-sm text-gray-600">Sign in to your ComandaGo Admin account</p>
+        <h2 class="mt-6 text-3xl font-bold text-gray-900">Bem vindo de Volta</h2>
+        <p class="mt-2 text-sm text-gray-600">Faça login na sua conta de Administrador ComandaGo</p>
       </div>
 
       <!-- Login Form -->
@@ -16,7 +16,7 @@
           <form @submit.prevent="handleLogin" class="space-y-6">
             <div>
               <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                Email address
+                Endereço de e-mail / Usuário
               </label>
               <input
                 id="email"
@@ -33,7 +33,7 @@
 
             <div>
               <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                Password
+                Senha
               </label>
               <div class="relative">
                 <input
@@ -44,7 +44,7 @@
                   required
                   class="input-field pr-10"
                   :class="{ 'input-error': errors.password }"
-                  placeholder="Enter your password"
+                  placeholder="Digite sua senha"
                 />
                 <button
                   type="button"
@@ -119,7 +119,7 @@
       <!-- Footer -->
       <div class="text-center">
         <p class="text-xs text-gray-500">
-          © 2024 ComandaGo Admin. Professional Restaurant Management System.
+          © 2025 ComandaGo Admin. Professional Restaurant Management System.
         </p>
       </div>
     </div>

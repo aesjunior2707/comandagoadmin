@@ -3,12 +3,12 @@
     <!-- Header -->
     <div class="flex justify-between items-center mb-8">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Products Management</h1>
-        <p class="text-gray-600">Manage your menu items and product catalog</p>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Gestão de Produtos</h1>
+        <p class="text-gray-600">Gerencie os itens do seu cardápio e catálogo de produtos.</p>
       </div>
       <button @click="showAddProductModal = true" class="btn-primary">
         <PlusIcon class="w-4 h-4 mr-2" />
-        Add Product
+        Adicionar Produto
       </button>
     </div>
 
@@ -51,18 +51,12 @@
           
           <div class="flex items-center gap-2">
             <span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full font-medium">{{ product.category }}</span>
-            <span v-if="product.isAvailable" class="px-3 py-1 bg-green-100 text-green-700 text-xs rounded-full font-medium">Available</span>
-            <span v-else class="px-3 py-1 bg-red-100 text-red-700 text-xs rounded-full font-medium">Unavailable</span>
           </div>
           
           <div class="flex gap-3 pt-4 border-t border-gray-100">
             <button @click="editProduct(product)" class="flex-1 btn-secondary text-sm">
               <PencilIcon class="w-4 h-4 mr-2" />
               Edit
-            </button>
-            <button @click="toggleAvailability(product)" class="flex-1 text-sm py-2 px-4 rounded-lg font-medium transition-colors"
-                    :class="product.isAvailable ? 'bg-red-100 hover:bg-red-200 text-red-700' : 'bg-green-100 hover:bg-green-200 text-green-700'">
-              {{ product.isAvailable ? 'Disable' : 'Enable' }}
             </button>
           </div>
         </div>
