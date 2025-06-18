@@ -4,7 +4,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <p class="mt-2 text-gray-600">Welcome back, {{ user?.name }}. Here's what's happening at {{ user?.restaurant?.name }} today.</p>
+        <p class="mt-2 text-gray-600">Bem-vindo de volta, {{ user?.name }}.  Veja o que está acontecendo no {{ user?.restaurant?.name }} hoje.</p>
       </div>
       <div class="mt-4 sm:mt-0 flex space-x-3">
         <button class="btn-secondary">
@@ -26,9 +26,9 @@
             <CurrencyDollarIcon class="w-6 h-6 text-emerald-600" />
           </div>
           <div class="flex-1">
-            <p class="text-sm font-medium text-gray-600 mb-1">Today's Revenue</p>
+            <p class="text-sm font-medium text-gray-600 mb-1">Faturamento de Hoje</p>
             <div class="flex items-baseline space-x-2">
-              <p class="text-2xl font-bold text-gray-900">${{ stats.todayRevenue.toLocaleString() }}</p>
+              <p class="text-2xl font-bold text-gray-900">R${{ stats.todayRevenue.toLocaleString() }}</p>
               <span class="text-sm font-medium text-emerald-600">+12.5%</span>
             </div>
           </div>
@@ -41,7 +41,7 @@
             <ReceiptPercentIcon class="w-6 h-6 text-blue-600" />
           </div>
           <div class="flex-1">
-            <p class="text-sm font-medium text-gray-600 mb-1">Orders Today</p>
+            <p class="text-sm font-medium text-gray-600 mb-1">Total de Pedidos de Hoje</p>
             <div class="flex items-baseline space-x-2">
               <p class="text-2xl font-bold text-gray-900">{{ stats.todayOrders }}</p>
               <span class="text-sm font-medium text-blue-600">+8.2%</span>
@@ -56,7 +56,7 @@
             <TableCellsIcon class="w-6 h-6 text-yellow-600" />
           </div>
           <div class="flex-1">
-            <p class="text-sm font-medium text-gray-600 mb-1">Tables Occupied</p>
+            <p class="text-sm font-medium text-gray-600 mb-1">Mesas Ocupadas</p>
             <div class="flex items-baseline space-x-2">
               <p class="text-2xl font-bold text-gray-900">{{ stats.occupiedTables }}/{{ stats.totalTables }}</p>
               <span class="text-sm font-medium text-yellow-600">{{ Math.round((stats.occupiedTables / stats.totalTables) * 100) }}%</span>
@@ -71,10 +71,10 @@
             <UserGroupIcon class="w-6 h-6 text-purple-600" />
           </div>
           <div class="flex-1">
-            <p class="text-sm font-medium text-gray-600 mb-1">Staff On Duty</p>
+            <p class="text-sm font-medium text-gray-600 mb-1">Total de Garçons</p>
             <div class="flex items-baseline space-x-2">
               <p class="text-2xl font-bold text-gray-900">{{ stats.staffOnDuty }}</p>
-              <span class="text-sm font-medium text-purple-600">Active</span>
+              <span class="text-sm font-medium text-purple-600">Ativo</span>
             </div>
           </div>
         </div>
@@ -88,9 +88,9 @@
         <div class="card">
           <div class="card-header">
             <div class="flex items-center justify-between">
-              <h2 class="text-lg font-semibold text-gray-900">Recent Orders</h2>
+              <h2 class="text-lg font-semibold text-gray-900">Pedidos Recentes</h2>
               <NuxtLink to="/history" class="text-sm font-medium text-emerald-600 hover:text-emerald-700">
-                View all orders
+                Ver Todos os Pedidos
               </NuxtLink>
             </div>
           </div>
@@ -114,7 +114,7 @@
                     </td>
                     <td class="font-medium">Table {{ order.table }}</td>
                     <td class="text-gray-600">{{ order.items }} items</td>
-                    <td class="font-semibold">${{ order.total.toFixed(2) }}</td>
+                    <td class="font-semibold">R${{ order.total.toFixed(2) }}</td>
                     <td>
                       <span :class="getOrderStatusClass(order.status)" class="badge">
                         {{ order.status }}
@@ -133,7 +133,7 @@
         <!-- Table Status -->
         <div class="card">
           <div class="card-header">
-            <h3 class="text-lg font-semibold text-gray-900">Table Status</h3>
+            <h3 class="text-lg font-semibold text-gray-900">Status da Mesas</h3>
           </div>
           <div class="card-body">
             <div class="space-y-4">
@@ -169,7 +169,7 @@
           </div>
           <div class="card-footer">
             <NuxtLink to="/tables" class="btn-secondary w-full justify-center">
-              Manage Tables
+              Visualizar Mesas
             </NuxtLink>
           </div>
         </div>
@@ -177,25 +177,25 @@
         <!-- Quick Actions -->
         <div class="card">
           <div class="card-header">
-            <h3 class="text-lg font-semibold text-gray-900">Quick Actions</h3>
+            <h3 class="text-lg font-semibold text-gray-900">Ações Rápidas</h3>
           </div>
           <div class="card-body">
             <div class="grid grid-cols-2 gap-4">
               <NuxtLink to="/products" class="btn-ghost p-4 flex flex-col items-center text-center space-y-2">
                 <CubeIcon class="w-6 h-6 text-emerald-600" />
-                <span class="text-xs font-medium">Add Product</span>
+                <span class="text-xs font-medium">Adicionar Produto</span>
               </NuxtLink>
               <NuxtLink to="/waiters" class="btn-ghost p-4 flex flex-col items-center text-center space-y-2">
                 <UserPlusIcon class="w-6 h-6 text-blue-600" />
-                <span class="text-xs font-medium">Add Staff</span>
+                <span class="text-xs font-medium">Adicionar Garçom</span>
               </NuxtLink>
               <NuxtLink to="/tables" class="btn-ghost p-4 flex flex-col items-center text-center space-y-2">
                 <TableCellsIcon class="w-6 h-6 text-yellow-600" />
-                <span class="text-xs font-medium">Add Table</span>
+                <span class="text-xs font-medium">Adicionar Mesa</span>
               </NuxtLink>
               <NuxtLink to="/categories" class="btn-ghost p-4 flex flex-col items-center text-center space-y-2">
                 <TagIcon class="w-6 h-6 text-purple-600" />
-                <span class="text-xs font-medium">Categories</span>
+                <span class="text-xs font-medium">Categorias</span>
               </NuxtLink>
             </div>
           </div>
@@ -204,7 +204,7 @@
         <!-- Top Performing Staff -->
         <div class="card">
           <div class="card-header">
-            <h3 class="text-lg font-semibold text-gray-900">Top Performers</h3>
+            <h3 class="text-lg font-semibold text-gray-900">Melhores Desempenhos</h3>
           </div>
           <div class="card-body">
             <div class="space-y-4">

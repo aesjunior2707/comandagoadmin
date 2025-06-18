@@ -27,7 +27,7 @@
           </div>
           <div>
             <p class="text-sm font-medium text-gray-600 mb-1">Today's Revenue</p>
-            <p class="text-2xl font-bold text-gray-900">${{ todayRevenue }}</p>
+            <p class="text-2xl font-bold text-gray-900">R${{ todayRevenue }}</p>
           </div>
         </div>
       </div>
@@ -140,7 +140,7 @@
               <td>Table {{ order.table }}</td>
               <td>{{ order.waiter }}</td>
               <td>{{ order.items.length }} items</td>
-              <td class="font-semibold">${{ order.total.toFixed(2) }}</td>
+              <td class="font-semibold">R${{ order.total.toFixed(2) }}</td>
               <td>
                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
                       :class="getStatusBadgeClass(order.status)">

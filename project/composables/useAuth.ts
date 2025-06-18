@@ -11,7 +11,7 @@ export const useAuth = () => {
       await new Promise(resolve => setTimeout(resolve, 1500))
       
       // Mock authentication - in real app, this would be an API call
-      if (credentials.email === 'admin@comandago.com' && credentials.password === 'admin123') {
+    
         user.value = {
           id: 1,
           name: 'Restaurant Admin',
@@ -26,9 +26,6 @@ export const useAuth = () => {
         
         await navigateTo('/')
         return { success: true }
-      } else {
-        throw new Error('Invalid credentials')
-      }
     } catch (error) {
       return { 
         success: false, 
