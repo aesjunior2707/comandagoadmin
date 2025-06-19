@@ -9,11 +9,11 @@
       <div class="mt-4 sm:mt-0 flex space-x-3">
         <button @click="refreshDashboard" :disabled="dashboardStore.isLoading" class="btn-secondary">
           <ArrowPathIcon class="w-4 h-4 mr-2" :class="{ 'animate-spin': dashboardStore.isLoading }" />
-          Refresh
+          Atualizar
         </button>
         <button class="btn-primary">
           <PlusIcon class="w-4 h-4 mr-2" />
-          Quick Order
+          Novo Pedido
         </button>
       </div>
     </div>

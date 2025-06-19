@@ -12,9 +12,22 @@ interface User {
   }
 }
 
+import HttpRequest from "../services/request"
+
+const api = new HttpRequest()
+
 interface AuthState {
   user: User | null
   isLoading: boolean
+}
+
+interface LoginResponse {
+  id: number
+  name_user: string,
+  restaurant: {
+    trade_name: string
+    id: string
+  }
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -31,58 +44,71 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    async login(credentials: { email: string; password: string }) {
+    async login(credentials: { username: string; password: string }) {
       this.isLoading = true
-      
+
       try {
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1500))
-        
-        // Mock authentication - in real app, this would be an API call
-        this.user = {
-          id: 1,
-          name: 'Restaurant Admin',
-          email: credentials.email,
-          role: 'admin',
-          avatar: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=400',
-          restaurant: {
-            name: 'La Bella Vista',
-            id: 'rest_001'
+        const res = await api.request('POST', 'auth/login', credentials)
+        console.log('Login successful:', res.data)
+
+
+
+        const data = res.data as LoginResponse
+
+        if (res.status !== 200) {
+          console.error('Login failed:', res)
+          return {
+            success: false,
+            id: data.id,
+            name: data.name_user,
           }
         }
-        
-        await navigateTo('/')
-        return { success: true }
-      } catch (error: any) {
-        return { 
-          success: false, 
-          error: error.message || 'Login failed' 
+
+          const typedData = res.data as LoginResponse
+
+          this.user = {
+            id: typedData.id,
+            name: typedData.name_user,
+            role: 'admin',
+            avatar: 'https://static.vecteezy.com/system/resources/thumbnails/000/439/863/small_2x/Basic_Ui__28186_29.jpg',
+            restaurant: {
+              name: typedData.restaurant.trade_name,
+              id: typedData.restaurant.id
+            }
+          }
+
+          await navigateTo('/')
+          return { success: true }
+        } catch (error: any) {
+          return {
+            success: false,
+            error: error.message || 'Login failed'
+          }
+        } finally {
+          this.isLoading = false
         }
-      } finally {
-        this.isLoading = false
-      }
-    },
+      },
 
     async logout() {
-      this.user = null
-      await navigateTo('/login')
-    },
+        this.user = null
+        await navigateTo('/login')
+      },
 
-    updateProfile(updates: Partial<User>) {
-      if (this.user) {
-        this.user = { ...this.user, ...updates }
+      updateProfile(updates: Partial<User>) {
+        if (this.user) {
+          this.user = { ...this.user, ...updates }
+        }
+      },
+
+      // Initialize user from stored session (for SSR/hydration)
+      initializeAuth() {
+        // In a real app, you might check localStorage or cookies here
+        // For now, we'll keep it simple
       }
     },
 
-    // Initialize user from stored session (for SSR/hydration)
-    initializeAuth() {
-      // In a real app, you might check localStorage or cookies here
-      // For now, we'll keep it simple
+    persist: {
+      storage: persistedState.localStorage,
+      paths: ['user']
     }
-  },
-
-  persist: {
-    storage: persistedState.localStorage,
-    paths: ['user']
-  }
-})
+  })

@@ -21,12 +21,12 @@
               <input
                 id="email"
                 v-model="form.email"
-                type="email"
-                autocomplete="email"
+                type="text"
+                autocomplete="text"
                 required
                 class="input-field"
                 :class="{ 'input-error': errors.email }"
-                placeholder="admin@comandago.com"
+                placeholder="Email ou Usuário"
               />
               <p v-if="errors.email" class="mt-1 text-sm text-red-600">{{ errors.email }}</p>
             </div>
@@ -67,13 +67,13 @@
                   class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded"
                 />
                 <label for="remember-me" class="ml-2 block text-sm text-gray-700">
-                  Remember me
+                  Lembrar-me
                 </label>
               </div>
 
               <div class="text-sm">
                 <a href="#" class="font-medium text-emerald-600 hover:text-emerald-500 transition-colors">
-                  Forgot your password?
+                  Recuperar senha ?
                 </a>
               </div>
             </div>
@@ -94,32 +94,18 @@
             >
               <div v-if="authStore.isLoading" class="flex items-center justify-center">
                 <div class="loading-spinner mr-2"></div>
-                Signing in...
+                  Entrando...
               </div>
-              <span v-else>Sign in</span>
+              <span v-else>Acessar sua conta</span>
             </button>
           </form>
-        </div>
-      </div>
-
-      <!-- Demo Credentials -->
-      <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <div class="flex">
-          <InformationCircleIcon class="h-5 w-5 text-blue-400 mt-0.5" />
-          <div class="ml-3">
-            <h3 class="text-sm font-medium text-blue-800">Demo Credentials</h3>
-            <div class="mt-2 text-sm text-blue-700">
-              <p><strong>Email:</strong> admin@comandago.com</p>
-              <p><strong>Password:</strong> admin123</p>
-            </div>
-          </div>
         </div>
       </div>
 
       <!-- Footer -->
       <div class="text-center">
         <p class="text-xs text-gray-500">
-          © 2025 ComandaGo Admin. Professional Restaurant Management System.
+          © 2025 ComandaGo Admin. Sistema Profissional de Gerenciamento para Restaurantes
         </p>
       </div>
     </div>
@@ -154,17 +140,9 @@ const showPassword = ref(false)
 const validateLoginForm = () => {
   errors.value = {}
   
-  if (!form.value.email) {
-    errors.value.email = 'Email is required'
-  } else if (!/\S+@\S+\.\S+/.test(form.value.email)) {
-    errors.value.email = 'Please enter a valid email address'
-  }
-  
   if (!form.value.password) {
     errors.value.password = 'Password is required'
-  } else if (form.value.password.length < 6) {
-    errors.value.password = 'Password must be at least 6 characters'
-  }
+  } 
   
   return Object.keys(errors.value).length === 0
 }
@@ -177,7 +155,7 @@ const handleLogin = async () => {
   }
   
   const result = await authStore.login({
-    email: form.value.email,
+    username: form.value.email,
     password: form.value.password
   })
   
@@ -186,9 +164,7 @@ const handleLogin = async () => {
   }
 }
 
-// Auto-fill demo credentials for easier testing
 onMounted(() => {
-  form.value.email = 'admin@comandago.com'
-  form.value.password = 'admin123'
+ 
 })
 </script>
