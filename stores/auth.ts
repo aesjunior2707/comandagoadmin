@@ -2,7 +2,8 @@ import { defineStore } from 'pinia'
 
 interface User {
   id: number
-  name: string
+  name: string,
+  company_id : string,
   email: string
   role: string
   avatar: string
@@ -23,7 +24,8 @@ interface AuthState {
 
 interface LoginResponse {
   id: number
-  name_user: string,
+  name_user: string
+  company_id: string
   restaurant: {
     trade_name: string
     id: string
@@ -65,10 +67,12 @@ export const useAuthStore = defineStore('auth', {
         }
 
           const typedData = res.data as LoginResponse
-
+     
           this.user = {
             id: typedData.id,
             name: typedData.name_user,
+            company_id: typedData.company_id,
+            email: '', 
             role: 'admin',
             avatar: 'https://static.vecteezy.com/system/resources/thumbnails/000/439/863/small_2x/Basic_Ui__28186_29.jpg',
             restaurant: {

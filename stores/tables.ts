@@ -1,13 +1,16 @@
 import { defineStore } from 'pinia'
 
+import HttpRequest from '~/services/request'
+
+import { useAuthStore } from './auth'
+
+const api = new HttpRequest()
+
 interface Table {
-  id: number
-  number: number
-  capacity: number
-  location: string
-  status: 'available' | 'occupied' | 'reserved' | 'out-of-service'
-  waiter: string | null
-  currentOrder: number | null
+  id: string
+  description: string
+  status:string
+  company_id: string
 }
 
 interface TableState {
@@ -18,14 +21,7 @@ interface TableState {
 export const useTablesStore = defineStore('tables', {
   state: (): TableState => ({
     tables: [
-      { id: 1, number: 1, capacity: 4, location: 'Main Floor', status: 'available', waiter: null, currentOrder: null },
-      { id: 2, number: 2, capacity: 2, location: 'Main Floor', status: 'occupied', waiter: 'John Doe', currentOrder: 85.50 },
-      { id: 3, number: 3, capacity: 6, location: 'Terrace', status: 'available', waiter: null, currentOrder: null },
-      { id: 4, number: 4, capacity: 4, location: 'Main Floor', status: 'reserved', waiter: 'Jane Smith', currentOrder: null },
-      { id: 5, number: 5, capacity: 8, location: 'Private Room', status: 'occupied', waiter: 'Mike Johnson', currentOrder: 124.75 },
-      { id: 6, number: 6, capacity: 2, location: 'Bar Area', status: 'available', waiter: null, currentOrder: null },
-      { id: 7, number: 7, capacity: 4, location: 'Main Floor', status: 'out-of-service', waiter: null, currentOrder: null },
-      { id: 8, number: 8, capacity: 6, location: 'Terrace', status: 'available', waiter: null, currentOrder: null }
+     
     ],
     isLoading: false
   }),
@@ -47,54 +43,50 @@ export const useTablesStore = defineStore('tables', {
   },
 
   actions: {
-    async addTable(tableData: Omit<Table, 'id' | 'status' | 'waiter' | 'currentOrder'>) {
+    async addTable(description : string) {
       this.isLoading = true
       try {
-        const newTable: Table = {
-          id: Math.max(...this.tables.map(t => t.id)) + 1,
-          ...tableData,
-          status: 'available',
-          waiter: null,
-          currentOrder: null
+        const content  = {
+          'id': description,
+          'description' : description,
+          'status': 'available',
+          'company_id': useAuthStore().user?.company_id
         }
-        this.tables.push(newTable)
-        return { success: true, table: newTable }
+        const res = await api.request('POST', 'company-tables/', content)
+        console.log('Table added successfully:', res.data)
+        
+        this.listar_mesas()
+        return true
       } catch (error: any) {
+        console.log('Error adding table:', error)
         return { success: false, error: error.message }
       } finally {
         this.isLoading = false
       }
     },
 
-    async updateTableStatus(tableId: number, status: Table['status']) {
-      const table = this.tables.find(t => t.id === tableId)
-      if (table) {
-        table.status = status
-        if (status === 'available') {
-          table.waiter = null
-          table.currentOrder = null
-        }
-        return { success: true }
-      }
-      return { success: false, error: 'Table not found' }
-    },
+  
+    async listar_mesas() {
+      try {
+        const res = await api.request('GET', `company-tables/${useAuthStore().user?.company_id}`)
+        
+        this.tables = [] 
 
-    async assignWaiterToTable(tableId: number, waiterName: string) {
-      const table = this.tables.find(t => t.id === tableId)
-      if (table) {
-        table.waiter = waiterName
-        return { success: true }
-      }
-      return { success: false, error: 'Table not found' }
-    },
+        const tables = (res.data as { data: Table[] }).data; // Explicitly cast res.data to the expected structure
 
-    async updateTableOrder(tableId: number, orderTotal: number) {
-      const table = this.tables.find(t => t.id === tableId)
-      if (table) {
-        table.currentOrder = orderTotal
-        return { success: true }
+        tables?.forEach((table: Table) => {
+          this.tables.push({
+            id: table.id,
+            description: table.description,
+            status: table.status,
+            company_id: table.company_id
+          })
+        })
       }
-      return { success: false, error: 'Table not found' }
+      catch (error: any) {
+        console.error('Error listing tables:', error)
+        return { success: false, error: error.message }
+      }
     }
   }
 })

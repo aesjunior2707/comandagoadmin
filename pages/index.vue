@@ -74,7 +74,6 @@
             <p class="text-sm font-medium text-gray-600 mb-1">Total de Garçons</p>
             <div class="flex items-baseline space-x-2">
               <p class="text-2xl font-bold text-gray-900">{{ waitersStore.waiterStatusCounts.onDuty }}</p>
-              <span class="text-sm font-medium text-purple-600">Ativo</span>
             </div>
           </div>
         </div>
