@@ -36,4 +36,5 @@ export { useRestaurantStore } from '../stores/restaurant';
 export { useTablesStore } from '../stores/tables';
 export { useWaitersStore } from '../stores/waiters';
 export { defineStore, acceptHMRUpdate, usePinia, storeToRefs } from '../node_modules/@pinia/nuxt/dist/runtime/composables';
+export { persistedState } from '../node_modules/@pinia-plugin-persistedstate/nuxt/dist/runtime/storages';
 export { definePageMeta } from '../node_modules/nuxt/dist/pages/runtime/composables';

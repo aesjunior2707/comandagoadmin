@@ -121,6 +121,7 @@
     "../node_modules/@nuxtjs/tailwindcss/runtime/server",
     "../node_modules/@vueuse/nuxt/runtime/server",
     "../node_modules/@pinia/nuxt/runtime/server",
+    "../node_modules/@pinia-plugin-persistedstate/nuxt/runtime/server",
     "../node_modules/@nuxt/telemetry/runtime/server",
     "./types/nitro.d.ts",
     "../**/*",
@@ -132,6 +133,7 @@
     "../node_modules/@nuxtjs/tailwindcss/node_modules",
     "../node_modules/@vueuse/nuxt/node_modules",
     "../node_modules/@pinia/nuxt/node_modules",
+    "../node_modules/@pinia-plugin-persistedstate/nuxt/node_modules",
     "../node_modules/@nuxt/telemetry/node_modules",
     "../dist"
   ]
