@@ -4,10 +4,9 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   modules: [
     '@nuxtjs/tailwindcss',
-    '@vueuse/nuxt',
-    '@pinia/nuxt'
+    '@vueuse/nuxt'
   ],
-  css: ['~/assets/css/main.css'],
+  css: ['./assets/css/main.css'],
   app: {
     head: {
       title: 'ComandaGo Admin',
