@@ -2,6 +2,7 @@
 export {}
 declare global {
   const abortNavigation: typeof import('../../node_modules/nuxt/dist/app/composables/router')['abortNavigation']
+  const acceptHMRUpdate: typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['acceptHMRUpdate']
   const addRouteMiddleware: typeof import('../../node_modules/nuxt/dist/app/composables/router')['addRouteMiddleware']
   const asyncComputed: typeof import('@vueuse/core')['asyncComputed']
   const autoResetRef: typeof import('@vueuse/core')['autoResetRef']
@@ -40,6 +41,7 @@ declare global {
   const definePayloadPlugin: typeof import('../../node_modules/nuxt/dist/app/nuxt')['definePayloadPlugin']
   const definePayloadReducer: typeof import('../../node_modules/nuxt/dist/app/composables/payload')['definePayloadReducer']
   const definePayloadReviver: typeof import('../../node_modules/nuxt/dist/app/composables/payload')['definePayloadReviver']
+  const defineStore: typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['defineStore']
   const eagerComputed: typeof import('@vueuse/core')['eagerComputed']
   const effect: typeof import('../../node_modules/vue')['effect']
   const effectScope: typeof import('../../node_modules/vue')['effectScope']
@@ -127,6 +129,7 @@ declare global {
   const shallowReadonly: typeof import('../../node_modules/vue')['shallowReadonly']
   const shallowRef: typeof import('../../node_modules/vue')['shallowRef']
   const showError: typeof import('../../node_modules/nuxt/dist/app/composables/error')['showError']
+  const storeToRefs: typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['storeToRefs']
   const syncRef: typeof import('@vueuse/core')['syncRef']
   const syncRefs: typeof import('@vueuse/core')['syncRefs']
   const templateRef: typeof import('@vueuse/core')['templateRef']
@@ -167,6 +170,7 @@ declare global {
   const useAsyncQueue: typeof import('@vueuse/core')['useAsyncQueue']
   const useAsyncState: typeof import('@vueuse/core')['useAsyncState']
   const useAttrs: typeof import('../../node_modules/vue')['useAttrs']
+  const useAuthStore: typeof import('../../stores/auth')['useAuthStore']
   const useBase64: typeof import('@vueuse/core')['useBase64']
   const useBattery: typeof import('@vueuse/core')['useBattery']
   const useBluetooth: typeof import('@vueuse/core')['useBluetooth']
@@ -187,6 +191,7 @@ declare global {
   const useCurrentElement: typeof import('@vueuse/core')['useCurrentElement']
   const useCycleList: typeof import('@vueuse/core')['useCycleList']
   const useDark: typeof import('@vueuse/core')['useDark']
+  const useDashboardStore: typeof import('../../stores/dashboard')['useDashboardStore']
   const useDateFormat: typeof import('@vueuse/core')['useDateFormat']
   const useDebounce: typeof import('@vueuse/core')['useDebounce']
   const useDebounceFn: typeof import('@vueuse/core')['useDebounceFn']
@@ -260,6 +265,7 @@ declare global {
   const useParentElement: typeof import('@vueuse/core')['useParentElement']
   const usePerformanceObserver: typeof import('@vueuse/core')['usePerformanceObserver']
   const usePermission: typeof import('@vueuse/core')['usePermission']
+  const usePinia: typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['usePinia']
   const usePointer: typeof import('@vueuse/core')['usePointer']
   const usePointerLock: typeof import('@vueuse/core')['usePointerLock']
   const usePointerSwipe: typeof import('@vueuse/core')['usePointerSwipe']
@@ -270,6 +276,7 @@ declare global {
   const usePreferredReducedMotion: typeof import('@vueuse/core')['usePreferredReducedMotion']
   const usePreviewMode: typeof import('../../node_modules/nuxt/dist/app/composables/preview')['usePreviewMode']
   const usePrevious: typeof import('@vueuse/core')['usePrevious']
+  const useProductsStore: typeof import('../../stores/products')['useProductsStore']
   const useRafFn: typeof import('@vueuse/core')['useRafFn']
   const useRefHistory: typeof import('@vueuse/core')['useRefHistory']
   const useRequestEvent: typeof import('../../node_modules/nuxt/dist/app/composables/ssr')['useRequestEvent']
@@ -279,6 +286,7 @@ declare global {
   const useRequestURL: typeof import('../../node_modules/nuxt/dist/app/composables/url')['useRequestURL']
   const useResizeObserver: typeof import('@vueuse/core')['useResizeObserver']
   const useResponseHeader: typeof import('../../node_modules/nuxt/dist/app/composables/ssr')['useResponseHeader']
+  const useRestaurantStore: typeof import('../../stores/restaurant')['useRestaurantStore']
   const useRoute: typeof import('../../node_modules/nuxt/dist/app/composables/router')['useRoute']
   const useRouteAnnouncer: typeof import('../../node_modules/nuxt/dist/app/composables/route-announcer')['useRouteAnnouncer']
   const useRouter: typeof import('../../node_modules/nuxt/dist/app/composables/router')['useRouter']
@@ -333,6 +341,7 @@ declare global {
   const useStyleTag: typeof import('@vueuse/core')['useStyleTag']
   const useSupported: typeof import('@vueuse/core')['useSupported']
   const useSwipe: typeof import('@vueuse/core')['useSwipe']
+  const useTablesStore: typeof import('../../stores/tables')['useTablesStore']
   const useTemplateRef: typeof import('../../node_modules/vue')['useTemplateRef']
   const useTemplateRefsList: typeof import('@vueuse/core')['useTemplateRefsList']
   const useTextDirection: typeof import('@vueuse/core')['useTextDirection']
@@ -357,6 +366,7 @@ declare global {
   const useVModels: typeof import('@vueuse/core')['useVModels']
   const useVibrate: typeof import('@vueuse/core')['useVibrate']
   const useVirtualList: typeof import('@vueuse/core')['useVirtualList']
+  const useWaitersStore: typeof import('../../stores/waiters')['useWaitersStore']
   const useWakeLock: typeof import('@vueuse/core')['useWakeLock']
   const useWebNotification: typeof import('@vueuse/core')['useWebNotification']
   const useWebSocket: typeof import('@vueuse/core')['useWebSocket']
@@ -399,6 +409,7 @@ import { UnwrapRef } from 'vue'
 declare module 'vue' {
   interface ComponentCustomProperties {
     readonly abortNavigation: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['abortNavigation']>
+    readonly acceptHMRUpdate: UnwrapRef<typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['acceptHMRUpdate']>
     readonly addRouteMiddleware: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['addRouteMiddleware']>
     readonly asyncComputed: UnwrapRef<typeof import('@vueuse/core')['asyncComputed']>
     readonly autoResetRef: UnwrapRef<typeof import('@vueuse/core')['autoResetRef']>
@@ -437,6 +448,7 @@ declare module 'vue' {
     readonly definePayloadPlugin: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/nuxt')['definePayloadPlugin']>
     readonly definePayloadReducer: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/payload')['definePayloadReducer']>
     readonly definePayloadReviver: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/payload')['definePayloadReviver']>
+    readonly defineStore: UnwrapRef<typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['defineStore']>
     readonly eagerComputed: UnwrapRef<typeof import('@vueuse/core')['eagerComputed']>
     readonly effect: UnwrapRef<typeof import('../../node_modules/vue')['effect']>
     readonly effectScope: UnwrapRef<typeof import('../../node_modules/vue')['effectScope']>
@@ -524,6 +536,7 @@ declare module 'vue' {
     readonly shallowReadonly: UnwrapRef<typeof import('../../node_modules/vue')['shallowReadonly']>
     readonly shallowRef: UnwrapRef<typeof import('../../node_modules/vue')['shallowRef']>
     readonly showError: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/error')['showError']>
+    readonly storeToRefs: UnwrapRef<typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['storeToRefs']>
     readonly syncRef: UnwrapRef<typeof import('@vueuse/core')['syncRef']>
     readonly syncRefs: UnwrapRef<typeof import('@vueuse/core')['syncRefs']>
     readonly templateRef: UnwrapRef<typeof import('@vueuse/core')['templateRef']>
@@ -564,6 +577,7 @@ declare module 'vue' {
     readonly useAsyncQueue: UnwrapRef<typeof import('@vueuse/core')['useAsyncQueue']>
     readonly useAsyncState: UnwrapRef<typeof import('@vueuse/core')['useAsyncState']>
     readonly useAttrs: UnwrapRef<typeof import('../../node_modules/vue')['useAttrs']>
+    readonly useAuthStore: UnwrapRef<typeof import('../../stores/auth')['useAuthStore']>
     readonly useBase64: UnwrapRef<typeof import('@vueuse/core')['useBase64']>
     readonly useBattery: UnwrapRef<typeof import('@vueuse/core')['useBattery']>
     readonly useBluetooth: UnwrapRef<typeof import('@vueuse/core')['useBluetooth']>
@@ -584,6 +598,7 @@ declare module 'vue' {
     readonly useCurrentElement: UnwrapRef<typeof import('@vueuse/core')['useCurrentElement']>
     readonly useCycleList: UnwrapRef<typeof import('@vueuse/core')['useCycleList']>
     readonly useDark: UnwrapRef<typeof import('@vueuse/core')['useDark']>
+    readonly useDashboardStore: UnwrapRef<typeof import('../../stores/dashboard')['useDashboardStore']>
     readonly useDateFormat: UnwrapRef<typeof import('@vueuse/core')['useDateFormat']>
     readonly useDebounce: UnwrapRef<typeof import('@vueuse/core')['useDebounce']>
     readonly useDebounceFn: UnwrapRef<typeof import('@vueuse/core')['useDebounceFn']>
@@ -657,6 +672,7 @@ declare module 'vue' {
     readonly useParentElement: UnwrapRef<typeof import('@vueuse/core')['useParentElement']>
     readonly usePerformanceObserver: UnwrapRef<typeof import('@vueuse/core')['usePerformanceObserver']>
     readonly usePermission: UnwrapRef<typeof import('@vueuse/core')['usePermission']>
+    readonly usePinia: UnwrapRef<typeof import('../../node_modules/@pinia/nuxt/dist/runtime/composables')['usePinia']>
     readonly usePointer: UnwrapRef<typeof import('@vueuse/core')['usePointer']>
     readonly usePointerLock: UnwrapRef<typeof import('@vueuse/core')['usePointerLock']>
     readonly usePointerSwipe: UnwrapRef<typeof import('@vueuse/core')['usePointerSwipe']>
@@ -667,6 +683,7 @@ declare module 'vue' {
     readonly usePreferredReducedMotion: UnwrapRef<typeof import('@vueuse/core')['usePreferredReducedMotion']>
     readonly usePreviewMode: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/preview')['usePreviewMode']>
     readonly usePrevious: UnwrapRef<typeof import('@vueuse/core')['usePrevious']>
+    readonly useProductsStore: UnwrapRef<typeof import('../../stores/products')['useProductsStore']>
     readonly useRafFn: UnwrapRef<typeof import('@vueuse/core')['useRafFn']>
     readonly useRefHistory: UnwrapRef<typeof import('@vueuse/core')['useRefHistory']>
     readonly useRequestEvent: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/ssr')['useRequestEvent']>
@@ -676,6 +693,7 @@ declare module 'vue' {
     readonly useRequestURL: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/url')['useRequestURL']>
     readonly useResizeObserver: UnwrapRef<typeof import('@vueuse/core')['useResizeObserver']>
     readonly useResponseHeader: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/ssr')['useResponseHeader']>
+    readonly useRestaurantStore: UnwrapRef<typeof import('../../stores/restaurant')['useRestaurantStore']>
     readonly useRoute: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['useRoute']>
     readonly useRouteAnnouncer: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/route-announcer')['useRouteAnnouncer']>
     readonly useRouter: UnwrapRef<typeof import('../../node_modules/nuxt/dist/app/composables/router')['useRouter']>
@@ -730,6 +748,7 @@ declare module 'vue' {
     readonly useStyleTag: UnwrapRef<typeof import('@vueuse/core')['useStyleTag']>
     readonly useSupported: UnwrapRef<typeof import('@vueuse/core')['useSupported']>
     readonly useSwipe: UnwrapRef<typeof import('@vueuse/core')['useSwipe']>
+    readonly useTablesStore: UnwrapRef<typeof import('../../stores/tables')['useTablesStore']>
     readonly useTemplateRef: UnwrapRef<typeof import('../../node_modules/vue')['useTemplateRef']>
     readonly useTemplateRefsList: UnwrapRef<typeof import('@vueuse/core')['useTemplateRefsList']>
     readonly useTextDirection: UnwrapRef<typeof import('@vueuse/core')['useTextDirection']>
@@ -754,6 +773,7 @@ declare module 'vue' {
     readonly useVModels: UnwrapRef<typeof import('@vueuse/core')['useVModels']>
     readonly useVibrate: UnwrapRef<typeof import('@vueuse/core')['useVibrate']>
     readonly useVirtualList: UnwrapRef<typeof import('@vueuse/core')['useVirtualList']>
+    readonly useWaitersStore: UnwrapRef<typeof import('../../stores/waiters')['useWaitersStore']>
     readonly useWakeLock: UnwrapRef<typeof import('@vueuse/core')['useWakeLock']>
     readonly useWebNotification: UnwrapRef<typeof import('@vueuse/core')['useWebNotification']>
     readonly useWebSocket: UnwrapRef<typeof import('@vueuse/core')['useWebSocket']>

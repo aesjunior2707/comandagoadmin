@@ -100,6 +100,9 @@
       "vue-demi": [
         "../node_modules/nuxt/dist/app/compat/vue-demi"
       ],
+      "pinia": [
+        "../node_modules/pinia/dist/pinia"
+      ],
       "#vue-router": [
         "../node_modules/vue-router"
       ],
@@ -158,6 +161,8 @@
     "../node_modules/@nuxtjs/tailwindcss/dist/runtime",
     "../node_modules/@vueuse/nuxt/runtime",
     "../node_modules/@vueuse/nuxt/dist/runtime",
+    "../node_modules/@pinia/nuxt/runtime",
+    "../node_modules/@pinia/nuxt/dist/runtime",
     "../node_modules/@nuxt/telemetry/runtime",
     "../node_modules/@nuxt/telemetry/dist/runtime",
     ".."
@@ -169,11 +174,14 @@
     "../node_modules/nuxt/node_modules",
     "../node_modules/@nuxtjs/tailwindcss/node_modules",
     "../node_modules/@vueuse/nuxt/node_modules",
+    "../node_modules/@pinia/nuxt/node_modules",
     "../node_modules/@nuxt/telemetry/node_modules",
     "../node_modules/@nuxtjs/tailwindcss/runtime/server",
     "../node_modules/@nuxtjs/tailwindcss/dist/runtime/server",
     "../node_modules/@vueuse/nuxt/runtime/server",
     "../node_modules/@vueuse/nuxt/dist/runtime/server",
+    "../node_modules/@pinia/nuxt/runtime/server",
+    "../node_modules/@pinia/nuxt/dist/runtime/server",
     "../node_modules/@nuxt/telemetry/runtime/server",
     "../node_modules/@nuxt/telemetry/dist/runtime/server",
     "../.output"
