@@ -36,6 +36,7 @@ export const useTablesStore = defineStore('tables', {
     occupiedTables: (state) => state.tables.filter(t => t.status === 'occupied'),
     reservedTables: (state) => state.tables.filter(t => t.status === 'reserved'),
     outOfServiceTables: (state) => state.tables.filter(t => t.status === 'out-of-service'),
+    totalTables: (state) => state.tables.length,
     tableStatusCounts: (state) => ({
       available: state.tables.filter(t => t.status === 'available').length,
       occupied: state.tables.filter(t => t.status === 'occupied').length,
