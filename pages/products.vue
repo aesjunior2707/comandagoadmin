@@ -38,29 +38,23 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <div v-for="product in filteredProducts" :key="product.id" class="card hover:shadow-lg transition-shadow duration-200">
         <div class="aspect-w-16 aspect-h-9 mb-6">
-          <img :src="product.image" :alt="product.name" class="w-full h-48 object-cover rounded-lg">
+          <img :src="'https://thumb.ac-illust.com/b1/b170870007dfa419295d949814474ab2_t.jpeg'" :alt="product.name" class="w-full h-48 object-cover rounded-lg">
         </div>
         
         <div class="space-y-4">
           <div class="flex justify-between items-start">
-            <h3 class="text-lg font-semibold text-gray-900">{{ product.name }}</h3>
-            <span class="text-lg font-bold text-emerald-600">${{ product.price }}</span>
+            <h3 class="text-lg font-semibold text-gray-900">{{ product.description }}</h3>
+            <span class="text-lg font-bold text-emerald-600">${{ product.price.toFixed(2) }}</span>
           </div>
-          
-          <p class="text-gray-600 text-sm leading-relaxed">{{ product.description }}</p>
-          
+           
           <div class="flex items-center gap-2">
             <span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded-full font-medium">{{ product.category }}</span>
-            <span v-if="!product.isAvailable" class="px-3 py-1 bg-red-100 text-red-700 text-xs rounded-full font-medium">Unavailable</span>
           </div>
           
           <div class="flex gap-3 pt-4 border-t border-gray-100">
             <button @click="editProduct(product)" class="flex-1 btn-secondary text-sm">
               <PencilIcon class="w-4 h-4 mr-2" />
               Edit
-            </button>
-            <button @click="toggleAvailability(product)" class="flex-1 btn-ghost text-sm" :class="product.isAvailable ? 'text-red-600' : 'text-green-600'">
-              {{ product.isAvailable ? 'Disable' : 'Enable' }}
             </button>
           </div>
         </div>
@@ -125,6 +119,7 @@
 
 <script setup>
 import { PlusIcon, PencilIcon } from '@heroicons/vue/24/outline'
+import { onMounted } from 'vue'
 
 const productsStore = useProductsStore()
 
@@ -143,34 +138,7 @@ const newProduct = ref({
 })
 
 const filteredProducts = computed(() => {
-  let filtered = productsStore.allProducts
-
-  // Filter by search query
-  if (searchQuery.value) {
-    filtered = filtered.filter(product => 
-      product.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchQuery.value.toLowerCase())
-    )
-  }
-
-  // Filter by category
-  if (selectedCategory.value) {
-    filtered = filtered.filter(product => product.category === selectedCategory.value)
-  }
-
-  // Sort products
-  filtered.sort((a, b) => {
-    switch (sortBy.value) {
-      case 'price':
-        return a.price - b.price
-      case 'category':
-        return a.category.localeCompare(b.category)
-      default:
-        return a.name.localeCompare(b.name)
-    }
-  })
-
-  return filtered
+    return productsStore.allProducts
 })
 
 const addProduct = async () => {
@@ -204,4 +172,8 @@ const editProduct = (product) => {
 const toggleAvailability = async (product) => {
   await productsStore.toggleProductAvailability(product.id)
 }
+
+onMounted(() => {
+  productsStore.list_products()
+})
 </script>

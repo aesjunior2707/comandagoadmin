@@ -43,15 +43,17 @@ export const useTablesStore = defineStore('tables', {
   },
 
   actions: {
-    async addTable(description : string) {
+    async addTable(description : String) {
       this.isLoading = true
       try {
         const content  = {
-          'id': description,
-          'description' : description,
+          'id': String(description),
+          'description' : String(description),
           'status': 'available',
           'company_id': useAuthStore().user?.company_id
         }
+
+        console.log('Adding table with content:', content)  
         const res = await api.request('POST', 'company-tables/', content)
         console.log('Table added successfully:', res.data)
         

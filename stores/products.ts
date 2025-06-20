@@ -1,4 +1,8 @@
 import { defineStore } from 'pinia'
+import { useAuthStore } from './auth'
+import HttpRequest from '~/services/request'
+
+const api = new HttpRequest()
 
 interface Product {
   id: number
@@ -10,8 +14,19 @@ interface Product {
   isAvailable: boolean
 }
 
+interface ProductComandoGo {
+  id: string
+  company_id: string
+  category_id: string
+  description: string
+  price: Number
+  created_at: string
+  updated_at: string
+  subcategory_id: string
+}
+
 interface ProductState {
-  products: Product[]
+  products: ProductComandoGo[]
   categories: string[]
   isLoading: boolean
 }
@@ -19,60 +34,6 @@ interface ProductState {
 export const useProductsStore = defineStore('products', {
   state: (): ProductState => ({
     products: [
-      {
-        id: 1,
-        name: 'Margherita Pizza',
-        description: 'Classic pizza with tomato sauce, mozzarella, and fresh basil',
-        price: 18.99,
-        category: 'Pizza',
-        image: 'https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg?auto=compress&cs=tinysrgb&w=400',
-        isAvailable: true
-      },
-      {
-        id: 2,
-        name: 'Chicken Caesar Salad',
-        description: 'Fresh romaine lettuce with grilled chicken, parmesan, and caesar dressing',
-        price: 14.99,
-        category: 'Salads',
-        image: 'https://images.pexels.com/photos/1213710/pexels-photo-1213710.jpeg?auto=compress&cs=tinysrgb&w=400',
-        isAvailable: true
-      },
-      {
-        id: 3,
-        name: 'Spaghetti Carbonara',
-        description: 'Traditional Italian pasta with eggs, cheese, pancetta, and black pepper',
-        price: 16.99,
-        category: 'Pasta',
-        image: 'https://images.pexels.com/photos/4518843/pexels-photo-4518843.jpeg?auto=compress&cs=tinysrgb&w=400',
-        isAvailable: true
-      },
-      {
-        id: 4,
-        name: 'Chocolate Tiramisu',
-        description: 'Rich Italian dessert with coffee-soaked ladyfingers and mascarpone',
-        price: 8.99,
-        category: 'Desserts',
-        image: 'https://images.pexels.com/photos/6880219/pexels-photo-6880219.jpeg?auto=compress&cs=tinysrgb&w=400',
-        isAvailable: true
-      },
-      {
-        id: 5,
-        name: 'Bruschetta',
-        description: 'Toasted bread topped with fresh tomatoes, garlic, and basil',
-        price: 9.99,
-        category: 'Appetizers',
-        image: 'https://images.pexels.com/photos/8844885/pexels-photo-8844885.jpeg?auto=compress&cs=tinysrgb&w=400',
-        isAvailable: false
-      },
-      {
-        id: 6,
-        name: 'Grilled Salmon',
-        description: 'Fresh Atlantic salmon with herbs and lemon butter sauce',
-        price: 24.99,
-        category: 'Main Courses',
-        image: 'https://images.pexels.com/photos/3926124/pexels-photo-3926124.jpeg?auto=compress&cs=tinysrgb&w=400',
-        isAvailable: true
-      }
     ],
     categories: ['Appetizers', 'Main Courses', 'Desserts', 'Beverages', 'Salads', 'Pasta', 'Pizza'],
     isLoading: false
@@ -81,7 +42,7 @@ export const useProductsStore = defineStore('products', {
   getters: {
     allProducts: (state) => state.products,
     availableProducts: (state) => state.products.filter(p => p.isAvailable),
-    productsByCategory: (state) => (category: string) => 
+    productsByCategory: (state) => (category: string) =>
       state.products.filter(p => p.category === category),
     getProductById: (state) => (id: number) => state.products.find(p => p.id === id),
     productCategories: (state) => state.categories,
@@ -90,6 +51,27 @@ export const useProductsStore = defineStore('products', {
   },
 
   actions: {
+    async list_products() {
+      const res = await api.request('GET', `company-products/${useAuthStore().user?.company_id}`)
+
+      res.data.data.forEach((product: ProductComandoGo) => {
+        const existingProduct = this.products.find(p => p.id === product.id)
+        if (!existingProduct) {
+          this.products.push({
+            id: product.id,
+            company_id: product.company_id,
+            category_id: product.category_id,
+            description: product.description,
+            price: product.price,
+            created_at: product.created_at,
+            updated_at: product.updated_at,
+            subcategory_id: product.subcategory_id
+          })
+        }
+      })
+
+      console.log('Products fetched successfully:', res.data)
+    },
     async addProduct(productData: Omit<Product, 'id'>) {
       this.isLoading = true
       try {
