@@ -1,12 +1,19 @@
 import { defineStore } from 'pinia'
+import { useTablesStore } from './tables'
+import { useProductsStore } from './products'
+import { useAuthStore } from './auth'
+
+import HttpRequest from '~/services/request'
+const api = new HttpRequest()
 
 interface Order {
-  id: number
-  table: number
-  items: number
-  total: number
-  status: 'completed' | 'preparing' | 'served' | 'cancelled'
-  time: Date
+  table_id: string
+  created_at: string
+  product_description: string
+  quantity: number
+  total_price: number
+  user_name : string
+
 }
 
 interface DashboardStats {
@@ -26,19 +33,15 @@ interface DashboardState {
 export const useDashboardStore = defineStore('dashboard', {
   state: (): DashboardState => ({
     stats: {
-      todayRevenue: 4250,
-      todayOrders: 87,
-      totalTables: 24,
-      occupiedTables: 18,
-      staffOnDuty: 8
+      todayRevenue: 0,
+      todayOrders: 0,
+      totalTables: 0,
+      occupiedTables: 0,
+      staffOnDuty: 0
     },
     recentOrders: [
-      { id: 1045, table: 12, items: 3, total: 89.50, status: 'completed', time: new Date(Date.now() - 300000) },
-      { id: 1044, table: 8, items: 5, total: 124.75, status: 'preparing', time: new Date(Date.now() - 600000) },
-      { id: 1043, table: 15, items: 2, total: 45.30, status: 'completed', time: new Date(Date.now() - 900000) },
-      { id: 1042, table: 3, items: 4, total: 78.90, status: 'served', time: new Date(Date.now() - 1200000) },
-      { id: 1041, table: 21, items: 6, total: 156.25, status: 'completed', time: new Date(Date.now() - 1500000) }
-    ],
+    ]
+    ,
     isLoading: false
   }),
 
@@ -47,22 +50,27 @@ export const useDashboardStore = defineStore('dashboard', {
     latestOrders: (state) => state.recentOrders.slice(0, 5),
     todayRevenue: (state) => state.stats.todayRevenue,
     occupancyRate: (state) => Math.round((state.stats.occupiedTables / state.stats.totalTables) * 100),
-    completedOrdersToday: (state) => state.recentOrders.filter(o => o.status === 'completed').length
+    completedOrdersToday: (state) => state.recentOrders
   },
 
   actions: {
     async fetchDashboardData() {
       this.isLoading = true
       try {
-        // Simulate API call
+        useTablesStore().listar_mesas()
+        useProductsStore().list_products()
+        this.get_orders_company()
+
+        const res = await api.request('GET', `dashboards/home-page?company_id=${useAuthStore().user?.company_id}`)
+       
+        this.stats.todayRevenue = res.data.total_amount
+        this.stats.todayOrders = res.data.total_orders
+        console.log('Stats updated:', this.stats)
         await new Promise(resolve => setTimeout(resolve, 1000))
         
         // In a real app, you would fetch data from your API here
         // For now, we'll just update the timestamp of recent orders
-        this.recentOrders = this.recentOrders.map(order => ({
-          ...order,
-          time: new Date(Date.now() - Math.random() * 3600000) // Random time within last hour
-        }))
+
         
         return { success: true }
       } catch (error: any) {
@@ -78,9 +86,7 @@ export const useDashboardStore = defineStore('dashboard', {
         // Simulate API call to refresh stats
         await new Promise(resolve => setTimeout(resolve, 500))
         
-        // Update stats with some random variation
-        this.stats.todayRevenue += Math.floor(Math.random() * 100)
-        this.stats.todayOrders += Math.floor(Math.random() * 5)
+      
         
         return { success: true }
       } catch (error: any) {
@@ -106,6 +112,28 @@ export const useDashboardStore = defineStore('dashboard', {
       this.stats.todayOrders++
       if (order.status === 'completed') {
         this.stats.todayRevenue += order.total
+      }
+    },
+    async get_orders_company() {
+      try {
+          const res = await api.request('GET', `company-orders/${useAuthStore().user?.company_id}`)
+          this.recentOrders = []
+          const orders = (res.data as { data: Order[] }).data; 
+          
+          orders?.forEach((order: Order) => {
+            this.recentOrders.push({
+              table_id: order.table_id,
+              created_at: order.created_at,
+              product_description: order.product_description,
+              quantity: order.quantity,
+              total_price: order.total_price,
+              user_name : order.user_name
+            })
+          })
+      }
+      catch (error: any) {
+        console.error('Error fetching company orders:', error)
+        return { success: false, error: error.message }
       }
     }
   }

@@ -190,7 +190,7 @@ const navigation = computed(() => [
   { name: 'Produtos', href: '/products', icon: CubeIcon, badge: productsStore.totalProducts.toString() },
   { name: 'Categorias', href: '/categories', icon: TagIcon },
   { name: 'Garçons', href: '/waiters', icon: UserGroupIcon, badge: waitersStore.totalWaiters.toString() },
-  { name: 'Histórico de Pedido', href: '/history', icon: ClockIcon }
+  { name: 'Histórico', href: '/history', icon: ClockIcon }
 ])
 
 const currentPageName = computed(() => {

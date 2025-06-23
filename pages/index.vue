@@ -28,8 +28,8 @@
           <div class="flex-1">
             <p class="text-sm font-medium text-gray-600 mb-1">Faturamento de Hoje</p>
             <div class="flex items-baseline space-x-2">
-              <p class="text-2xl font-bold text-gray-900">R${{ dashboardStore.todayRevenue.toLocaleString() }}</p>
-              <span class="text-sm font-medium text-emerald-600">+12.5%</span>
+              <p class="text-2xl font-bold text-gray-900">R${{ dashboardStore.todayRevenue.toFixed(2) }}</p>
+              
             </div>
           </div>
         </div>
@@ -44,7 +44,6 @@
             <p class="text-sm font-medium text-gray-600 mb-1">Total de Pedidos de Hoje</p>
             <div class="flex items-baseline space-x-2">
               <p class="text-2xl font-bold text-gray-900">{{ dashboardStore.dashboardStats.todayOrders }}</p>
-              <span class="text-sm font-medium text-blue-600">+8.2%</span>
             </div>
           </div>
         </div>
@@ -98,27 +97,23 @@
               <table class="data-table">
                 <thead>
                   <tr>
-                    <th>Order</th>
-                    <th>Table</th>
-                    <th>Items</th>
+                    <th>Mesa</th>
+                    <th>Produto</th>
+                    <th>Quantidade</th>
                     <th>Total</th>
-                    <th>Status</th>
+                    <th>Garçom</th>
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                  <tr v-for="order in dashboardStore.latestOrders" :key="order.id">
+                  <tr v-for="order in dashboardStore.latestOrders" :key="order.table_id">
                     <td>
-                      <div class="font-medium text-gray-900">#{{ order.id.toString().padStart(4, '0') }}</div>
-                      <div class="text-sm text-gray-500">{{ formatTime(order.time) }}</div>
+                      <div class="font-medium text-gray-900">#{{ order.table_id}}</div>
+                      <div class="text-sm text-gray-500">{{ order.created_at }}</div>
                     </td>
-                    <td class="font-medium">Table {{ order.table }}</td>
-                    <td class="text-gray-600">{{ order.items }} items</td>
-                    <td class="font-semibold">R${{ order.total.toFixed(2) }}</td>
-                    <td>
-                      <span :class="getOrderStatusClass(order.status)" class="badge">
-                        {{ order.status }}
-                      </span>
-                    </td>
+                    <td class="font-medium">{{ order.product_description }}</td>
+                    <td class="text-gray-600 text-center">{{ order.quantity }}</td>
+                    <td class="font-semibold">R${{ order.total_price.toFixed(2) }}</td>
+                    <td class="font-medium text-start">{{ order.user_name }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -139,30 +134,16 @@
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
                   <div class="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span class="text-sm text-gray-600">Available</span>
+                  <span class="text-sm text-gray-600">Disponível</span>
                 </div>
                 <span class="text-sm font-semibold text-gray-900">{{ tablesStore.tableStatusCounts.available }}</span>
               </div>
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
-                  <div class="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                  <span class="text-sm text-gray-600">Occupied</span>
+                  <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+                  <span class="text-sm text-gray-600">Ocupadas</span>
                 </div>
                 <span class="text-sm font-semibold text-gray-900">{{ tablesStore.tableStatusCounts.occupied }}</span>
-              </div>
-              <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                  <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
-                  <span class="text-sm text-gray-600">Reserved</span>
-                </div>
-                <span class="text-sm font-semibold text-gray-900">{{ tablesStore.tableStatusCounts.reserved }}</span>
-              </div>
-              <div class="flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                  <div class="w-3 h-3 bg-red-500 rounded-full"></div>
-                  <span class="text-sm text-gray-600">Out of Service</span>
-                </div>
-                <span class="text-sm font-semibold text-gray-900">{{ tablesStore.tableStatusCounts.outOfService }}</span>
               </div>
             </div>
           </div>
@@ -201,7 +182,7 @@
         </div>
 
         <!-- Top Performing Staff -->
-        <div class="card">
+        <div class="card" v-if="false">
           <div class="card-header">
             <h3 class="text-lg font-semibold text-gray-900">Melhores Desempenhos</h3>
           </div>

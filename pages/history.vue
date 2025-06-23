@@ -78,7 +78,7 @@
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
       <div class="p-6 border-b border-gray-200">
         <div class="flex justify-between items-center">
-          <h2 class="text-xl font-semibold text-gray-900">Pedidos Recentes</h2>
+          <h2 class="text-xl font-semibold text-gray-900">Histórico</h2>
           <div class="flex items-center gap-2">
             <span class="text-sm text-gray-600">{{ filteredOrders.length }} orders</span>
           </div>
@@ -89,32 +89,23 @@
         <table class="data-table">
           <thead>
             <tr>
-              <th>Order #</th>
-              <th>Table</th>
-              <th>Waiter</th>
-              <th>Items</th>
+              <th>Mesa</th>
+              <th>Data de Fechamento</th>
+              <th>Garçom</th>
               <th>Total</th>
-              <th>Status</th>
-              <th>Date</th>
-              <th>Actions</th>
+              <th>Tipo de Pagamento</th>
+              <th>Ações</th>
             </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-            <tr v-for="order in paginatedOrders" :key="order.id">
+            <tr v-for="order in orders" :key="order.id">
               <td class="font-medium">
-                #{{ order.id.toString().padStart(4, '0') }}
+                {{ order.table_id }}
               </td>
-              <td>Table {{ order.table }}</td>
-              <td>{{ order.waiter }}</td>
-              <td>{{ order.items.length }} items</td>
-              <td class="font-semibold">R${{ order.total.toFixed(2) }}</td>
-              <td>
-                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-                      :class="getStatusBadgeClass(order.status)">
-                  {{ order.status }}
-                </span>
-              </td>
-              <td class="text-gray-500">{{ formatDate(order.date) }}</td>
+              <td>{{ order.created_at }}</td>
+              <td>{{ order.user_name }}</td>
+              <td  class="font-semibold">R$ {{ order.total_amount.toFixed(2) }}</td>
+              <td>{{ order.payment_type }}</td>
               <td>
                 <div class="flex gap-2">
                   <button @click="viewOrderDetails(order)" class="text-emerald-600 hover:text-emerald-900 text-sm font-medium">
@@ -159,6 +150,9 @@ import {
   ClockIcon,
   StarIcon
 } from '@heroicons/vue/24/outline'
+import { onMounted } from 'vue'
+
+import {useRestaurantStore} from '@/stores/restaurant'
 
 definePageMeta({
   middleware: 'auth'
@@ -172,59 +166,7 @@ const currentPage = ref(1)
 const itemsPerPage = ref(10)
 
 // Sample data
-const orders = ref([
-  {
-    id: 1001,
-    table: 5,
-    waiter: 'John Doe',
-    items: [
-      { name: 'Margherita Pizza', quantity: 1, price: 18.99 },
-      { name: 'Caesar Salad', quantity: 1, price: 14.99 }
-    ],
-    total: 33.98,
-    status: 'completed',
-    date: new Date('2024-01-25T12:30:00'),
-    paymentMethod: 'Credit Card'
-  },
-  {
-    id: 1002,
-    table: 12,
-    waiter: 'Jane Smith',
-    items: [
-      { name: 'Spaghetti Carbonara', quantity: 2, price: 16.99 },
-      { name: 'Tiramisu', quantity: 1, price: 8.99 }
-    ],
-    total: 42.97,
-    status: 'completed',
-    date: new Date('2024-01-25T13:15:00'),
-    paymentMethod: 'Cash'
-  },
-  {
-    id: 1003,
-    table: 3,
-    waiter: 'Mike Johnson',
-    items: [
-      { name: 'Grilled Salmon', quantity: 1, price: 24.99 }
-    ],
-    total: 24.99,
-    status: 'cancelled',
-    date: new Date('2024-01-25T14:00:00'),
-    paymentMethod: 'Credit Card'
-  },
-  {
-    id: 1004,
-    table: 8,
-    waiter: 'Sarah Wilson',
-    items: [
-      { name: 'Bruschetta', quantity: 2, price: 9.99 },
-      { name: 'Chicken Caesar Salad', quantity: 1, price: 14.99 }
-    ],
-    total: 34.97,
-    status: 'completed',
-    date: new Date('2024-01-25T15:30:00'),
-    paymentMethod: 'Credit Card'
-  }
-])
+const orders = computed(() => useRestaurantStore().restaurantHistory)
 
 const availableTables = computed(() => [...new Set(orders.value.map(o => o.table))].sort((a, b) => a - b))
 const availableWaiters = computed(() => [...new Set(orders.value.map(o => o.waiter))].sort())
@@ -237,11 +179,10 @@ const todayRevenue = computed(() => {
 })
 
 const todayOrders = computed(() => {
-  return orders.value.filter(o => isToday(o.date)).length
+  return 1
 })
 
-const avgOrderTime = computed(() => 25) // Placeholder
-const avgRating = computed(() => 4.6) // Placeholder
+
 
 const filteredOrders = computed(() => {
   let filtered = orders.value
@@ -279,7 +220,7 @@ const paginatedOrders = computed(() => {
 
 const isToday = (date) => {
   const today = new Date()
-  return date.toDateString() === today.toDateString()
+  return today
 }
 
 const formatDate = (date) => {
@@ -324,5 +265,10 @@ const refreshData = () => {
 // Reset pagination when filters change
 watch([selectedTable, selectedWaiter, selectedStatus, selectedDateRange], () => {
   currentPage.value = 1
+})
+
+onMounted(async() => {
+  console.log("Fetching restaurant history data...")
+  await useRestaurantStore().list_history()
 })
 </script>

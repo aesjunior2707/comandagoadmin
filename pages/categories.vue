@@ -17,12 +17,9 @@
       <div v-for="category in categories" :key="category.id" class="card hover:shadow-lg transition-shadow duration-200">
         <div class="flex items-center justify-between mb-6">
           <div class="flex items-center space-x-4">
-            <div class="w-12 h-12 rounded-lg flex items-center justify-center text-2xl" :style="{ backgroundColor: category.color + '20', color: category.color }">
-              {{ category.icon }}
-            </div>
             <div>
-              <h3 class="text-lg font-semibold text-gray-900">{{ category.name }}</h3>
-              <p class="text-sm text-gray-600">{{ category.productCount }} items</p>
+              <h3 class="text-lg font-semibold text-gray-900">{{ category.description }}</h3>
+              <p class="text-sm text-gray-600">{{ 1}} items</p>
             </div>
           </div>
           <div class="flex gap-2">
@@ -36,7 +33,7 @@
         </div>
                 
         <div class="flex justify-between items-center text-sm mb-6">
-          <span class="text-gray-500">Created: {{ formatDate(category.createdAt) }}</span>
+          <span class="text-gray-500">Created: {{ category.created_at }}</span>
         </div>
 
         <div class="pt-4 border-t border-gray-100">
@@ -104,6 +101,9 @@
 
 <script setup>
 import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/vue/24/outline'
+import { computed, onMounted } from 'vue'
+
+import {useProductsStore} from '~/stores/products'
 
 definePageMeta({
   middleware: 'auth'
@@ -124,78 +124,7 @@ const availableColors = ref([
   '#EC4899', '#10B981', '#F97316', '#6366F1', '#84CC16'
 ])
 
-const categories = ref([
-  {
-    id: 1,
-    name: 'Pizza',
-    description: 'Traditional and gourmet pizzas with various toppings',
-    icon: '🍕',
-    color: '#EF4444',
-    productCount: 12,
-    isActive: true,
-    createdAt: new Date('2024-01-15')
-  },
-  {
-    id: 2,
-    name: 'Pasta',
-    description: 'Fresh pasta dishes with authentic Italian sauces',
-    icon: '🍝',
-    color: '#F59E0B',
-    productCount: 8,
-    isActive: true,
-    createdAt: new Date('2024-01-16')
-  },
-  {
-    id: 3,
-    name: 'Salads',
-    description: 'Fresh and healthy salad options',
-    icon: '🥗',
-    color: '#10B981',
-    productCount: 6,
-    isActive: true,
-    createdAt: new Date('2024-01-17')
-  },
-  {
-    id: 4,
-    name: 'Appetizers',
-    description: 'Perfect starters to begin your meal',
-    icon: '🥖',
-    color: '#8B5CF6',
-    productCount: 10,
-    isActive: true,
-    createdAt: new Date('2024-01-18')
-  },
-  {
-    id: 5,
-    name: 'Desserts',
-    description: 'Sweet treats to end your meal perfectly',
-    icon: '🍰',
-    color: '#EC4899',
-    productCount: 7,
-    isActive: true,
-    createdAt: new Date('2024-01-19')
-  },
-  {
-    id: 6,
-    name: 'Beverages',
-    description: 'Refreshing drinks and specialty cocktails',
-    icon: '🥤',
-    color: '#3B82F6',
-    productCount: 15,
-    isActive: true,
-    createdAt: new Date('2024-01-20')
-  },
-  {
-    id: 7,
-    name: 'Main Courses',
-    description: 'Hearty main dishes and signature specialties',
-    icon: '🍖',
-    color: '#F97316',
-    productCount: 14,
-    isActive: false,
-    createdAt: new Date('2024-01-21')
-  }
-])
+const categories = computed(() => useProductsStore().allCategories)
 
 const formatDate = (date) => {
   return date.toLocaleDateString('en-US', { 
@@ -251,4 +180,8 @@ const viewCategoryProducts = (category) => {
   // Navigate to products page with category filter
   navigateTo(`/products?category=${encodeURIComponent(category.name)}`)
 }
+
+onMounted(async () => {
+  await useProductsStore().list_categories()
+})
 </script>

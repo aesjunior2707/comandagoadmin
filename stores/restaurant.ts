@@ -1,4 +1,9 @@
 import { defineStore } from 'pinia'
+import { useAuthStore } from './auth'
+
+import HttpRequest from '~/services/request'
+const api = new HttpRequest()
+
 
 interface RestaurantInfo {
   name: string
@@ -22,6 +27,17 @@ interface RestaurantState {
   info: RestaurantInfo
   stats: RestaurantStats
   isLoading: boolean
+  history: History[]
+}
+
+interface History {
+  table_id  : string
+  total_amount: number
+  payment_type: string
+  company_id: string
+  created_at: string
+  id: string
+  user_name: string
 }
 
 export const useRestaurantStore = defineStore('restaurant', {
@@ -42,12 +58,14 @@ export const useRestaurantStore = defineStore('restaurant', {
       totalWaiters: 8,
       monthlyOrders: 1245
     },
-    isLoading: false
+    isLoading: false,
+    history: [],
   }),
 
   getters: {
     restaurantInfo: (state) => state.info,
     restaurantStats: (state) => state.stats,
+    restaurantHistory: (state) => state.history,
     isRestaurantOpen: (state) => {
       const now = new Date()
       const currentTime = now.getHours() * 100 + now.getMinutes()
@@ -58,6 +76,34 @@ export const useRestaurantStore = defineStore('restaurant', {
   },
 
   actions: {
+    async list_history() {
+      try {
+        const res = await api.request('GET', `company-salesrecords/${useAuthStore().user?.company_id}`)
+        
+        this.history = []
+        
+        if (res.data.data && Array.isArray(res.data.data)) {
+          this.history = res.data.data.map((item: any) => ({
+            table_id: item.table_id,
+            total_amount: item.total_amount,
+            payment_type: item.payment_type,
+            company_id: item.company_id,
+            created_at: item.created_at,
+            id: item.id,
+            user_name: item.user_name
+          }))
+
+          console.log('History fetched successfully:', this.history)
+        } else {
+          console.warn('Unexpected data format:', res.data)
+          this.history = []
+        }
+      }
+      catch (error) {
+        console.error('Error fetching history:', error)
+        return []
+      }
+    },
     async updateRestaurantInfo(updates: Partial<RestaurantInfo>) {
       this.isLoading = true
       try {

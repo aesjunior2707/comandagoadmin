@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { useAuthStore } from './auth'
 import HttpRequest from '~/services/request'
+import { categories } from '@vueuse/core/metadata.cjs'
 
 const api = new HttpRequest()
 
@@ -27,30 +28,57 @@ interface ProductComandoGo {
 
 interface ProductState {
   products: ProductComandoGo[]
-  categories: string[]
+  categories: Categories[]
   isLoading: boolean
+}
+
+interface Categories {
+  id : string
+  description : string
+  company_id : string
+  created_at : string
+  updated_at : string
+  printer_id : string
 }
 
 export const useProductsStore = defineStore('products', {
   state: (): ProductState => ({
     products: [
     ],
-    categories: ['Appetizers', 'Main Courses', 'Desserts', 'Beverages', 'Salads', 'Pasta', 'Pizza'],
+    categories: [],
     isLoading: false
   }),
 
   getters: {
+    allCategories: (state) => state.categories,
     allProducts: (state) => state.products,
-    availableProducts: (state) => state.products.filter(p => p.isAvailable),
+    availableProducts: (state) => state.products,
     productsByCategory: (state) => (category: string) =>
-      state.products.filter(p => p.category === category),
-    getProductById: (state) => (id: number) => state.products.find(p => p.id === id),
+      state.products.filter(p => p.id === category),
+    getProductById: (state) => (id: number) => state.products,
     productCategories: (state) => state.categories,
     totalProducts: (state) => state.products.length,
-    availableProductsCount: (state) => state.products.filter(p => p.isAvailable).length
+    availableProductsCount: (state) => state.products.length
   },
 
   actions: {
+    async list_categories() {
+      const res = await api.request('GET', `company-category/${useAuthStore().user?.company_id}`)
+      res.data.data.forEach((category: Categories) => {
+        const existingCategory = this.categories.find(c => c.id === category.id)
+        if (!existingCategory) {
+          this.categories.push({
+            id: category.id,
+            description: category.description,
+            company_id: category.company_id,
+            created_at: category.created_at,
+            updated_at: category.updated_at,
+            printer_id: category.printer_id
+          })
+        }
+      })
+      console.log('Categories fetched successfully:', res.data)
+    },
     async list_products() {
       const res = await api.request('GET', `company-products/${useAuthStore().user?.company_id}`)
 
