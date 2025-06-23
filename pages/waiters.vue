@@ -3,7 +3,9 @@
     <!-- Header -->
     <div class="flex justify-between items-center mb-8">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Gestão da Sua Equipe</h1>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">
+          Gestão da Sua Equipe
+        </h1>
         <p class="text-gray-600">
           Gerencie a equipe do seu restaurante e o desempenho deles.
         </p>
@@ -25,7 +27,9 @@
             <p class="text-sm font-medium text-gray-600 mb-1">
               Total de Colaboradores
             </p>
-            <p class="text-2xl font-bold text-gray-900">{{ waitersStore.totalWaiters }}</p>
+            <p class="text-2xl font-bold text-gray-900">
+              {{ waitersStore.totalWaiters }}
+            </p>
           </div>
         </div>
       </div>
@@ -51,8 +55,6 @@
           </div>
         </div>
 
-      
-
         <div class="flex gap-3 pt-4 border-t border-gray-100">
           <button
             @click="editWaiter(waiter)"
@@ -61,7 +63,6 @@
             <PencilIcon class="w-4 h-4 mr-2" />
             Editar
           </button>
-         
         </div>
       </div>
     </div>
@@ -76,80 +77,16 @@
       >
         <div class="p-8">
           <h2 class="text-xl font-semibold text-gray-900 mb-6">
-            Add New Waiter
+            Adicionar Novo Colaborador
           </h2>
           <form @submit.prevent="addWaiter" class="form-section">
-            <div class="form-row">
-              <div class="form-group">
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >First Name</label
-                >
-                <input
-                  v-model="newWaiter.firstName"
-                  type="text"
-                  class="input-field"
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Last Name</label
-                >
-                <input
-                  v-model="newWaiter.lastName"
-                  type="text"
-                  class="input-field"
-                  required
-                />
-              </div>
-            </div>
-
             <div class="form-group">
               <label class="block text-sm font-medium text-gray-700 mb-2"
-                >Position</label
-              >
-              <select v-model="newWaiter.position" class="input-field" required>
-                <option value="">Select position</option>
-                <option value="Waiter">Waiter</option>
-                <option value="Senior Waiter">Senior Waiter</option>
-                <option value="Head Waiter">Head Waiter</option>
-                <option value="Sommelier">Sommelier</option>
-              </select>
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Phone</label
-                >
-                <input
-                  v-model="newWaiter.phone"
-                  type="tel"
-                  class="input-field"
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label class="block text-sm font-medium text-gray-700 mb-2"
-                  >Experience (years)</label
-                >
-                <input
-                  v-model="newWaiter.experience"
-                  type="number"
-                  min="0"
-                  class="input-field"
-                  required
-                />
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label class="block text-sm font-medium text-gray-700 mb-2"
-                >Email</label
+                >Nome do Colaborador</label
               >
               <input
-                v-model="newWaiter.email"
-                type="email"
+                v-model="newWaiter.name"
+                type="text"
                 class="input-field"
                 required
               />
@@ -157,13 +94,38 @@
 
             <div class="form-group">
               <label class="block text-sm font-medium text-gray-700 mb-2"
-                >Avatar URL</label
+                >Tipo do Colaborador</label
               >
-              <input
-                v-model="newWaiter.avatar"
-                type="url"
-                class="input-field"
-              />
+              <select v-model="newWaiter.user_type" class="input-field" required>
+                <option value="">Selecione o Tipo do Colaborador</option>
+                <option value="A">Administrador</option>
+                <option value="G">Garçom</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Usuario</label
+                >
+                <input
+                  v-model="newWaiter.username"
+                  type="tel"
+                  class="input-field"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Senha</label
+                >
+                <input
+                  v-model="newWaiter.password"
+                  type="password"
+                  class="input-field"
+                  required
+                />
+              </div>
             </div>
 
             <div class="flex gap-4 pt-6">
@@ -172,11 +134,15 @@
                 @click="showAddWaiterModal = false"
                 class="flex-1 btn-secondary"
               >
-                Cancel
+                Cancelar
               </button>
-              <button type="submit" :disabled="waitersStore.isLoading" class="flex-1 btn-primary">
-                <span v-if="waitersStore.isLoading">Adding...</span>
-                <span v-else>Add Waiter</span>
+              <button
+                type="submit"
+                :disabled="waitersStore.isLoading"
+                class="flex-1 btn-primary"
+              >
+                <span v-if="waitersStore.isLoading">Adicionando...</span>
+                <span v-else>Adicionar Colaborador</span>
               </button>
             </div>
           </form>
@@ -196,27 +162,45 @@ import {
   XCircleIcon,
   StarIcon,
 } from "@heroicons/vue/24/outline";
+import { rand } from "@vueuse/core";
 import { onMounted } from "vue";
 
-const waitersStore = useWaitersStore()
+const waitersStore = useWaitersStore();
 
+const authStore = useAuthStore()
 const showAddWaiterModal = ref(false);
 
 const newWaiter = ref({
-  firstName: "",
-  lastName: "",
-  position: "",
-  phone: "",
-  email: "",
-  experience: "",
-  avatar: "",
+  id : "",
+  name: "",
+  company_id : "",
+  username: "",
+  password: "",
+  user_type : "A"
 });
 
+const addWaiter = async () => {
+  try {
+    newWaiter.value.id = "USR-" + Math.random().toString(36).substr(2, 9),
 
-const editWaiter = (waiter) => {
-  console.log("Edit waiter:", waiter);
+    newWaiter.value.company_id = authStore.user.company_id;
+    
+    await waitersStore.add_waiter(newWaiter.value);
+    
+    showAddWaiterModal.value = false;
+    
+    newWaiter.value = {
+      name: "",
+      username: "",
+      password: "",
+      user_type : "A"
+    };
+
+    await waitersStore.list_users();
+  } catch (error) {
+    console.error("Error adding waiter:", error);
+  }
 };
-
 
 onMounted(async () => {
   await waitersStore.list_users();

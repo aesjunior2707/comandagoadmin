@@ -67,6 +67,17 @@ export const useWaitersStore = defineStore('waiters', {
       }
     },
 
+    async add_waiter(waiter: Colaborador) {
+      try {
+        const res = await api.request('POST', `users/`, waiter)
+      
+        return { success: true, data: res.data.data }
+      } catch (error: any) {
+        console.error('Error adding waiter:', error)
+        return { success: false, error: error.message }
+      }
+    }
+
 
 
   }
