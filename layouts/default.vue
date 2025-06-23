@@ -189,7 +189,7 @@ const navigation = computed(() => [
   { name: 'Mesas', href: '/tables', icon: TableCellsIcon, badge: tablesStore.totalTables.toString() },
   { name: 'Produtos', href: '/products', icon: CubeIcon, badge: productsStore.totalProducts.toString() },
   { name: 'Categorias', href: '/categories', icon: TagIcon },
-  { name: 'Garçons', href: '/waiters', icon: UserGroupIcon, badge: waitersStore.totalWaiters.toString() },
+  { name: 'Equipe', href: '/waiters', icon: UserGroupIcon, badge: waitersStore.totalWaiters.toString() },
   { name: 'Histórico', href: '/history', icon: ClockIcon }
 ])
 

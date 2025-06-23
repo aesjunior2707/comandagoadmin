@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { useTablesStore } from './tables'
 import { useProductsStore } from './products'
 import { useAuthStore } from './auth'
-
+import {useWaitersStore} from './waiters'
 import HttpRequest from '~/services/request'
 const api = new HttpRequest()
 
@@ -60,7 +60,7 @@ export const useDashboardStore = defineStore('dashboard', {
         useTablesStore().listar_mesas()
         useProductsStore().list_products()
         this.get_orders_company()
-
+        useWaitersStore().list_users()
         const res = await api.request('GET', `dashboards/home-page?company_id=${useAuthStore().user?.company_id}`)
        
         this.stats.todayRevenue = res.data.total_amount

@@ -3,14 +3,14 @@
     <!-- Header -->
     <div class="flex justify-between items-center mb-8">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900 mb-2">Gestão de Garçons</h1>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Gestão da Sua Equipe</h1>
         <p class="text-gray-600">
           Gerencie a equipe do seu restaurante e o desempenho deles.
         </p>
       </div>
       <button @click="showAddWaiterModal = true" class="btn-primary">
         <PlusIcon class="w-4 h-4 mr-2" />
-        Adicionar Garçom
+        Adicionar Colaborador
       </button>
     </div>
 
@@ -23,7 +23,7 @@
           </div>
           <div>
             <p class="text-sm font-medium text-gray-600 mb-1">
-              Total de Garçons
+              Total de Colaboradores
             </p>
             <p class="text-2xl font-bold text-gray-900">{{ waitersStore.totalWaiters }}</p>
           </div>
@@ -40,7 +40,7 @@
       >
         <div class="flex items-center mb-6 space-x-4">
           <img
-            :src="waiter.avatar"
+            :src="'https://static.vecteezy.com/system/resources/thumbnails/000/439/863/small_2x/Basic_Ui__28186_29.jpg'"
             :alt="waiter.name"
             class="w-16 h-16 rounded-full object-cover"
           />
@@ -48,35 +48,10 @@
             <h3 class="text-lg font-semibold text-gray-900">
               {{ waiter.name }}
             </h3>
-            <p class="text-sm text-gray-600">{{ waiter.position }}</p>
-            <span :class="getStatusBadgeClass(waiter.status)" class="badge mt-2">
-              {{ waiter.status }}
-            </span>
           </div>
         </div>
 
-        <div class="space-y-3 mb-6">
-          <div class="flex justify-between text-sm">
-            <span class="text-gray-600">Phone:</span>
-            <span class="font-medium">{{ waiter.phone }}</span>
-          </div>
-          <div class="flex justify-between text-sm">
-            <span class="text-gray-600">Email:</span>
-            <span class="font-medium">{{ waiter.email }}</span>
-          </div>
-          <div class="flex justify-between text-sm">
-            <span class="text-gray-600">Experience:</span>
-            <span class="font-medium">{{ waiter.experience }} years</span>
-          </div>
-          <div class="flex justify-between text-sm">
-            <span class="text-gray-600">Tables Today:</span>
-            <span class="font-medium">{{ waiter.tablesServed }}</span>
-          </div>
-          <div class="flex justify-between text-sm">
-            <span class="text-gray-600">Rating:</span>
-            <span class="font-medium">{{ waiter.rating }}/5</span>
-          </div>
-        </div>
+      
 
         <div class="flex gap-3 pt-4 border-t border-gray-100">
           <button
@@ -86,13 +61,7 @@
             <PencilIcon class="w-4 h-4 mr-2" />
             Editar
           </button>
-          <button
-            @click="changeWaiterStatus(waiter)"
-            :class="getStatusButtonClass(waiter.status)"
-            class="flex-1 text-sm py-2 px-3 rounded font-medium transition-colors"
-          >
-            {{ getStatusButtonText(waiter.status) }}
-          </button>
+         
         </div>
       </div>
     </div>
@@ -227,6 +196,7 @@ import {
   XCircleIcon,
   StarIcon,
 } from "@heroicons/vue/24/outline";
+import { onMounted } from "vue";
 
 const waitersStore = useWaitersStore()
 
@@ -242,69 +212,13 @@ const newWaiter = ref({
   avatar: "",
 });
 
-const getStatusBadgeClass = (status) => {
-  const classes = {
-    "on-duty": "bg-green-100 text-green-800",
-    "on-break": "bg-yellow-100 text-yellow-800",
-    "off-duty": "bg-red-100 text-red-800",
-  };
-  return classes[status] || "bg-gray-100 text-gray-800";
-};
-
-const getStatusButtonClass = (status) => {
-  const classes = {
-    "on-duty": "bg-yellow-100 hover:bg-yellow-200 text-yellow-700",
-    "on-break": "bg-green-100 hover:bg-green-200 text-green-700",
-    "off-duty": "bg-green-100 hover:bg-green-200 text-green-700",
-  };
-  return classes[status] || "bg-gray-100 hover:bg-gray-200 text-gray-700";
-};
-
-const getStatusButtonText = (status) => {
-  const texts = {
-    "on-duty": "Break",
-    "on-break": "Resume",
-    "off-duty": "Clock In",
-  };
-  return texts[status] || "Change";
-};
-
-const addWaiter = async () => {
-  const result = await waitersStore.addWaiter({
-    name: `${newWaiter.value.firstName} ${newWaiter.value.lastName}`,
-    position: newWaiter.value.position,
-    phone: newWaiter.value.phone,
-    email: newWaiter.value.email,
-    experience: parseInt(newWaiter.value.experience),
-    avatar: newWaiter.value.avatar || "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=400",
-  });
-
-  if (result.success) {
-    showAddWaiterModal.value = false;
-    // Reset form
-    newWaiter.value = {
-      firstName: "",
-      lastName: "",
-      position: "",
-      phone: "",
-      email: "",
-      experience: "",
-      avatar: "",
-    };
-  }
-};
 
 const editWaiter = (waiter) => {
   console.log("Edit waiter:", waiter);
 };
 
-const changeWaiterStatus = async (waiter) => {
-  const statusFlow = {
-    "off-duty": "on-duty",
-    "on-duty": "on-break",
-    "on-break": "on-duty",
-  };
-  const newStatus = statusFlow[waiter.status] || "off-duty";
-  await waitersStore.updateWaiterStatus(waiter.id, newStatus);
-};
+
+onMounted(async () => {
+  await waitersStore.list_users();
+});
 </script>

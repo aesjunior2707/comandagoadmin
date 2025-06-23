@@ -39,7 +39,7 @@
               <button type="submit" :disabled="restaurantStore.isLoading" class="btn-primary">
                 <CheckIcon class="w-4 h-4 mr-2" />
                 <span v-if="restaurantStore.isLoading">Saving...</span>
-                <span v-else>Save Changes</span>
+                <span v-else>Salvar Mudanças</span>
               </button>
             </div>
           </form>
@@ -47,7 +47,7 @@
       </div>
 
       <!-- Restaurant Stats -->
-      <div class="space-y-6">
+      <div class="space-y-6" v-if="false">
         <div class="card">
           <h3 class="text-lg font-semibold text-gray-900 mb-6">Estatísticas do Restaurante</h3>
           <div class="space-y-4">
