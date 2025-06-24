@@ -70,7 +70,7 @@
             <UserGroupIcon class="w-6 h-6 text-purple-600" />
           </div>
           <div class="flex-1">
-            <p class="text-sm font-medium text-gray-600 mb-1">Total de Garçons</p>
+            <p class="text-sm font-medium text-gray-600 mb-1">Total de Colaboradores</p>
             <div class="flex items-baseline space-x-2">
               <p class="text-2xl font-bold text-gray-900">{{ waitersStore.waiterStatusCounts.onDuty }}</p>
             </div>
@@ -167,7 +167,7 @@
               </NuxtLink>
               <NuxtLink to="/waiters" class="btn-ghost p-4 flex flex-col items-center text-center space-y-2">
                 <UserPlusIcon class="w-6 h-6 text-blue-600" />
-                <span class="text-xs font-medium">Adicionar Garçom</span>
+                <span class="text-xs font-medium">Adicionar Colaborador</span>
               </NuxtLink>
               <NuxtLink to="/tables" class="btn-ghost p-4 flex flex-col items-center text-center space-y-2">
                 <TableCellsIcon class="w-6 h-6 text-yellow-600" />

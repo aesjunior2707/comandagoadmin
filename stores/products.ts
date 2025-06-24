@@ -29,16 +29,26 @@ interface ProductComandoGo {
 interface ProductState {
   products: ProductComandoGo[]
   categories: Categories[]
+  printers: Printers[]
   isLoading: boolean
 }
 
 interface Categories {
-  id : string
-  description : string
-  company_id : string
-  created_at : string
-  updated_at : string
-  printer_id : string
+  id: string
+  description: string
+  company_id: string
+  created_at: string
+  updated_at: string
+  printer_id: string
+}
+
+interface Printers {
+  address: string
+  company_id: string
+  description: string
+  id: string
+  reference: string
+  terminal: string
 }
 
 export const useProductsStore = defineStore('products', {
@@ -46,12 +56,14 @@ export const useProductsStore = defineStore('products', {
     products: [
     ],
     categories: [],
+    printers: [],
     isLoading: false
   }),
 
   getters: {
     allCategories: (state) => state.categories,
     allProducts: (state) => state.products,
+    allPrinters: (state) => state.printers,
     availableProducts: (state) => state.products,
     productsByCategory: (state) => (category: string) =>
       state.products.filter(p => p.id === category),
@@ -62,6 +74,40 @@ export const useProductsStore = defineStore('products', {
   },
 
   actions: {
+    async list_printers() {
+      try {
+        const res = await api.request('GET', `company-printers/${useAuthStore().user?.company_id}`)
+        res.data.data.forEach((printer: Printers) => {
+          const existingPrinter = this.printers.find(p => p.id === printer.id)
+          if (!existingPrinter) {
+            this.printers.push({
+              address: printer.address,
+              company_id: printer.company_id,
+              description: printer.description,
+              id: printer.id,
+              reference: printer.reference,
+              terminal: printer.terminal
+            })
+          }
+        })
+        console.log('Printers fetched successfully:', res.data)
+      }
+      catch (error: any) {
+        console.error('Error fetching printers:', error)
+        throw new Error(error.message || 'Failed to fetch printers')
+      }
+      
+    },
+    async add_category(categoryData: Categories) {
+      try {
+        const res = await api.request('POST', `company-category/`, categoryData)
+        return { success: true }
+      }
+      catch (error: any) {
+        console.error('Error adding category:', error)
+        return { success: false, error: error.message }
+      }
+    },
     async list_categories() {
       const res = await api.request('GET', `company-category/${useAuthStore().user?.company_id}`)
       res.data.data.forEach((category: Categories) => {
