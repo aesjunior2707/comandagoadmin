@@ -33,7 +33,7 @@
               v-model="searchQuery"
               type="text"
               placeholder="Pesquisar produtos..."
-              class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+              class="block w-full pl-10 pr-10 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
             />
             <button
               v-if="searchQuery"
@@ -63,6 +63,21 @@
               {{ category.description }}
             </button>
           </div>
+
+          <!-- Results Info -->
+          <div v-if="searchQuery || selectedCategory" class="flex items-center justify-between text-sm text-gray-600">
+            <span>
+              {{ filteredProducts.length }} {{ filteredProducts.length === 1 ? 'produto encontrado' : 'produtos encontrados' }}
+              {{ searchQuery ? `para "${searchQuery}"` : '' }}
+              {{ selectedCategory ? `em ${selectedCategory.description}` : '' }}
+            </span>
+            <button
+              @click="clearFilters"
+              class="text-emerald-600 hover:text-emerald-700 font-medium"
+            >
+              Limpar Filtros
+            </button>
+          </div>
         </div>
 
         <!-- Products Grid -->
@@ -71,13 +86,13 @@
           <div v-if="filteredProducts.length === 0" class="text-center py-12">
             <CubeIcon class="w-12 h-12 text-gray-300 mx-auto mb-3" />
             <p class="text-gray-500 text-lg mb-2">Nenhum produto encontrado</p>
-            <p class="text-gray-400 text-sm">
-              {{ searchQuery ? `Tente pesquisar por "${searchQuery}" com outros termos` : 'Não há produtos disponíveis nesta categoria' }}
+            <p class="text-gray-400 text-sm mb-4">
+              {{ searchQuery ? `Tente pesquisar por outros termos` : 'Não há produtos disponíveis nesta categoria' }}
             </p>
             <button
               v-if="searchQuery || selectedCategory"
               @click="clearFilters"
-              class="mt-4 btn-secondary"
+              class="btn-secondary"
             >
               Limpar Filtros
             </button>
@@ -89,22 +104,14 @@
               v-for="product in filteredProducts"
               :key="product.id"
               @click="addToOrder(product)"
-              class="bg-white rounded-lg border border-gray-200 p-4 cursor-pointer hover:shadow-md hover:border-emerald-300 transition-all duration-200"
+              class="bg-white rounded-lg border border-gray-200 p-4 cursor-pointer hover:shadow-md hover:border-emerald-300 transition-all duration-200 group"
             >
-              <div class="aspect-square bg-gray-100 rounded-lg mb-3 flex items-center justify-center">
-                <CubeIcon class="w-8 h-8 text-gray-400" />
+              <div class="aspect-square bg-gray-100 rounded-lg mb-3 flex items-center justify-center group-hover:bg-emerald-50 transition-colors">
+                <CubeIcon class="w-8 h-8 text-gray-400 group-hover:text-emerald-500" />
               </div>
               <h3 class="font-medium text-gray-900 text-sm mb-1 line-clamp-2">{{ product.description }}</h3>
               <p class="text-lg font-bold text-emerald-600">R$ {{ Number(product.price).toFixed(2) }}</p>
             </div>
-          </div>
-
-          <!-- Results Count -->
-          <div v-if="filteredProducts.length > 0" class="mt-6 text-center">
-            <p class="text-sm text-gray-500">
-              {{ filteredProducts.length }} {{ filteredProducts.length === 1 ? 'produto encontrado' : 'produtos encontrados' }}
-              {{ searchQuery ? `para "${searchQuery}"` : '' }}
-            </p>
           </div>
         </div>
       </div>
@@ -273,6 +280,7 @@ definePageMeta({
   layout: false
 })
 
+const route = useRoute()
 const productsStore = useProductsStore()
 const tablesStore = useTablesStore()
 
@@ -306,7 +314,7 @@ const filteredProducts = computed(() => {
 })
 
 const availableTables = computed(() => {
-  return tablesStore.availableTables
+  return tablesStore.allTables.filter(table => table.status === 'available')
 })
 
 const subtotal = computed(() => {
@@ -408,13 +416,22 @@ const goToDashboard = () => {
   navigateTo('/')
 }
 
-// Initialize data
+// Initialize data and handle URL parameters
 onMounted(async () => {
   await Promise.all([
     productsStore.list_products(),
     productsStore.list_categories(),
     tablesStore.listar_mesas()
   ])
+
+  // Check if table is specified in URL
+  const tableParam = route.query.table
+  if (tableParam) {
+    const table = tablesStore.allTables.find(t => t.id === tableParam)
+    if (table) {
+      selectedTable.value = table
+    }
+  }
 })
 </script>
 

@@ -70,13 +70,22 @@
           </div>
 
           <div class="flex gap-3">
-            <button
-              @click.stop="editTable(table)"
+            <NuxtLink
+              :to="`/table/${table.id}`"
+              @click.stop
               v-if="table.status == 'occupied'"
-              class="flex-1 text-xs py-2 px-3 bg-gray-100 hover:bg-gray-200 rounded font-medium transition-colors"
+              class="flex-1 text-xs py-2 px-3 bg-gray-100 hover:bg-gray-200 rounded font-medium transition-colors text-center"
             >
               Visualizar Mesa
-            </button>
+            </NuxtLink>
+            <NuxtLink
+              :to="`/pos?table=${table.id}`"
+              @click.stop
+              v-if="table.status == 'available'"
+              class="flex-1 text-xs py-2 px-3 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 rounded font-medium transition-colors text-center"
+            >
+              Iniciar Pedido
+            </NuxtLink>
           </div>
         </div>
       </div>
@@ -174,19 +183,6 @@ const addTable = async () => {
 
 const selectTable = (table) => {
   console.log("Selected table:", table);
-};
-
-const editTable = (table) => {
-  console.log("Edit table:", table);
-};
-
-const changeTableStatus = async (table) => {
-  const statuses = ["available", "occupied", "reserved", "out-of-service"];
-  const currentIndex = statuses.indexOf(table.status);
-  const nextIndex = (currentIndex + 1) % statuses.length;
-  const newStatus = statuses[nextIndex];
-
-  await tablesStore.updateTableStatus(table.id, newStatus);
 };
 
 onMounted(async () => {
