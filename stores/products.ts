@@ -6,13 +6,14 @@ import { categories } from '@vueuse/core/metadata.cjs'
 const api = new HttpRequest()
 
 interface Product {
-  id: number
-  name: string
+  id: string
+  company_id: string
+  category_id: string
   description: string
   price: number
-  category: string
-  image: string
-  isAvailable: boolean
+  created_at: string
+  updated_at: string
+  subcategory_id?: string
 }
 
 interface ProductComandoGo {
@@ -96,7 +97,7 @@ export const useProductsStore = defineStore('products', {
         console.error('Error fetching printers:', error)
         throw new Error(error.message || 'Failed to fetch printers')
       }
-      
+
     },
     async add_category(categoryData: Categories) {
       try {
@@ -146,16 +147,15 @@ export const useProductsStore = defineStore('products', {
 
       console.log('Products fetched successfully:', res.data)
     },
-    async addProduct(productData: Omit<Product, 'id'>) {
-      this.isLoading = true
+    async addProduct(productData: Product) {
       try {
-        const newProduct: Product = {
-          id: Math.max(...this.products.map(p => p.id)) + 1,
-          ...productData
-        }
-        this.products.push(newProduct)
-        return { success: true, product: newProduct }
+          console.log ('Adding product:', productData)
+          const res = await api.request('POST', `company-products/`, productData)
+          this.list_products() // Refresh the product list after adding
+
+        return { success: true }
       } catch (error: any) {
+        console.error('Error adding product:', error)
         return { success: false, error: error.message }
       } finally {
         this.isLoading = false

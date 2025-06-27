@@ -61,6 +61,7 @@ export const useDashboardStore = defineStore('dashboard', {
         useProductsStore().list_products()
         this.get_orders_company()
         useWaitersStore().list_users()
+        useProductsStore().list_categories();
         const res = await api.request('GET', `dashboards/home-page?company_id=${useAuthStore().user?.company_id}`)
        
         this.stats.todayRevenue = res.data.total_amount

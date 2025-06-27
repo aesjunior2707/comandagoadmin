@@ -14,11 +14,20 @@
           <form @submit.prevent="saveRestaurantInfo" class="form-section">
             <div class="form-row">
               <div class="form-group">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Razão Social</label>
+                <input v-model="restaurantForm.legal_name" type="text" class="input-field" placeholder="Enter restaurant name">
+              </div>
+              <div class="form-group">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Nome do Restaurante</label>
-                <input v-model="restaurantForm.name" type="text" class="input-field" placeholder="Enter restaurant name">
+                <input v-model="restaurantForm.trade_name" type="text" class="input-field" placeholder="Enter restaurant name">
               </div>
             </div>
-
+           
+              <div class="form-group">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Responsável</label>
+                <input v-model="restaurantForm.responsible_person" type="text" class="input-field" placeholder="Enter restaurant name">
+              </div>
+            
             <div class="form-group">
               <label class="block text-sm font-medium text-gray-700 mb-2">Endereço</label>
               <textarea v-model="restaurantForm.address" rows="3" class="input-field" placeholder="Enter full address"></textarea>
@@ -27,11 +36,11 @@
             <div class="form-row">
               <div class="form-group">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Número de Telefone</label>
-                <input v-model="restaurantForm.phone" type="tel" class="input-field" placeholder="+1 (555) 123-4567">
+                <input v-model="restaurantForm.contact_phone" type="tel" class="input-field" placeholder="+1 (555) 123-4567">
               </div>
               <div class="form-group">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                <input v-model="restaurantForm.email" type="email" class="input-field" placeholder="info@restaurant.com">
+                <input v-model="restaurantForm.contact_email" type="email" class="input-field" placeholder="info@restaurant.com">
               </div>
             </div>
 
@@ -80,10 +89,12 @@ import { CheckIcon } from '@heroicons/vue/24/outline'
 const restaurantStore = useRestaurantStore()
 
 const restaurantForm = ref({
-  name: '',
+  trade_name: '',
+  legal_name: '',
   address: '',
-  phone: '',
-  email: ''
+  contact_phone: '',
+  contact_email: '',
+  responsible_person : ''
 })
 
 const saveRestaurantInfo = async () => {
@@ -97,13 +108,16 @@ const saveRestaurantInfo = async () => {
 }
 
 // Initialize form with current restaurant info
-onMounted(() => {
+onMounted(async () => {
+  await restaurantStore.fetchRestaurantInfo()
   const info = restaurantStore.restaurantInfo
   restaurantForm.value = {
-    name: info.name,
+    trade_name: info.trade_name,
+    legal_name: info.legal_name,
     address: info.address,
-    phone: info.phone,
-    email: info.email
+    contact_phone: info.contact_phone,
+    contact_email: info.email,
+    responsible_person: info.responsible_person || ''
   }
 })
 </script>

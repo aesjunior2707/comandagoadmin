@@ -6,14 +6,15 @@ const api = new HttpRequest()
 
 
 interface RestaurantInfo {
-  name: string
-  cuisineType: string
+  trade_name: string
+  legal_name: string
   address: string
-  phone: string
-  email: string
-  openingTime: string
-  closingTime: string
-  description: string
+  contact_phone: string
+  contact_email: string | null
+  responsible_person: string
+  tax_id: string | null
+  created_at: string
+  updated_at: string
 }
 
 interface RestaurantStats {
@@ -43,14 +44,15 @@ interface History {
 export const useRestaurantStore = defineStore('restaurant', {
   state: (): RestaurantState => ({
     info: {
-      name: 'La Bella Vista',
-      cuisineType: 'italian',
-      address: '123 Main Street, Downtown\nCity, State 12345',
-      phone: '+1 (555) 123-4567',
-      email: 'info@labellavista.com',
-      openingTime: '09:00',
-      closingTime: '22:00',
-      description: 'Authentic Italian cuisine in the heart of downtown. Fresh ingredients, traditional recipes, and warm hospitality.'
+      legal_name : '',
+      trade_name: '',
+      address: '',
+      contact_phone: '',
+      contact_email: null,
+      responsible_person: '',
+      tax_id: null,
+      created_at: '',
+      updated_at: ''
     },
     stats: {
       totalTables: 24,
@@ -66,16 +68,30 @@ export const useRestaurantStore = defineStore('restaurant', {
     restaurantInfo: (state) => state.info,
     restaurantStats: (state) => state.stats,
     restaurantHistory: (state) => state.history,
-    isRestaurantOpen: (state) => {
-      const now = new Date()
-      const currentTime = now.getHours() * 100 + now.getMinutes()
-      const openTime = parseInt(state.info.openingTime.replace(':', ''))
-      const closeTime = parseInt(state.info.closingTime.replace(':', ''))
-      return currentTime >= openTime && currentTime <= closeTime
-    }
   },
 
   actions: {
+    async fetchRestaurantInfo() {
+      try {
+          const res = await api.request('GET', `companies/${useAuthStore().user?.company_id}`)
+          if (res.data && res.data.data) {
+            this.info = {
+              legal_name: res.data.data.legal_name || '',
+              trade_name: res.data.data.trade_name || '',
+              address: res.data.data.address || '',
+              contact_phone: res.data.data.contact_phone || '',
+              contact_email: res.data.data.contact_email || null,
+              responsible_person: res.data.data.responsible_person || '',
+              tax_id: res.data.data.tax_id || null,
+              created_at: res.data.data.created_at || '',
+              updated_at: res.data.data.updated_at || ''
+            }
+          }
+      }
+      catch (error) {
+        console.error('Error fetching restaurant info:', error)
+      }
+    },
     async list_history() {
       try {
         const res = await api.request('GET', `company-salesrecords/${useAuthStore().user?.company_id}`)
