@@ -22,8 +22,29 @@
     <div class="flex h-[calc(100vh-4rem)]">
       <!-- Left Side - Products -->
       <div class="flex-1 flex flex-col">
-        <!-- Categories Filter -->
-        <div class="bg-white border-b border-gray-200 p-4">
+        <!-- Search and Categories Filter -->
+        <div class="bg-white border-b border-gray-200 p-4 space-y-4">
+          <!-- Search Bar -->
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <MagnifyingGlassIcon class="h-5 w-5 text-gray-400" />
+            </div>
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Pesquisar produtos..."
+              class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+            />
+            <button
+              v-if="searchQuery"
+              @click="searchQuery = ''"
+              class="absolute inset-y-0 right-0 pr-3 flex items-center"
+            >
+              <XMarkIcon class="h-4 w-4 text-gray-400 hover:text-gray-600" />
+            </button>
+          </div>
+
+          <!-- Categories Filter -->
           <div class="flex space-x-2 overflow-x-auto">
             <button
               @click="selectedCategory = null"
@@ -46,7 +67,24 @@
 
         <!-- Products Grid -->
         <div class="flex-1 p-6 overflow-y-auto">
-          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <!-- No Results Message -->
+          <div v-if="filteredProducts.length === 0" class="text-center py-12">
+            <CubeIcon class="w-12 h-12 text-gray-300 mx-auto mb-3" />
+            <p class="text-gray-500 text-lg mb-2">Nenhum produto encontrado</p>
+            <p class="text-gray-400 text-sm">
+              {{ searchQuery ? `Tente pesquisar por "${searchQuery}" com outros termos` : 'Não há produtos disponíveis nesta categoria' }}
+            </p>
+            <button
+              v-if="searchQuery || selectedCategory"
+              @click="clearFilters"
+              class="mt-4 btn-secondary"
+            >
+              Limpar Filtros
+            </button>
+          </div>
+
+          <!-- Products Grid -->
+          <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             <div
               v-for="product in filteredProducts"
               :key="product.id"
@@ -59,6 +97,14 @@
               <h3 class="font-medium text-gray-900 text-sm mb-1 line-clamp-2">{{ product.description }}</h3>
               <p class="text-lg font-bold text-emerald-600">R$ {{ Number(product.price).toFixed(2) }}</p>
             </div>
+          </div>
+
+          <!-- Results Count -->
+          <div v-if="filteredProducts.length > 0" class="mt-6 text-center">
+            <p class="text-sm text-gray-500">
+              {{ filteredProducts.length }} {{ filteredProducts.length === 1 ? 'produto encontrado' : 'produtos encontrados' }}
+              {{ searchQuery ? `para "${searchQuery}"` : '' }}
+            </p>
           </div>
         </div>
       </div>
@@ -218,7 +264,8 @@ import {
   XMarkIcon,
   PlusIcon,
   MinusIcon,
-  CheckIcon
+  CheckIcon,
+  MagnifyingGlassIcon
 } from '@heroicons/vue/24/outline'
 
 definePageMeta({
@@ -236,13 +283,26 @@ const orderItems = ref([])
 const showTableSelector = ref(false)
 const showSuccessModal = ref(false)
 const isLoading = ref(false)
+const searchQuery = ref('')
 
 // Computed
 const filteredProducts = computed(() => {
-  if (!selectedCategory.value) {
-    return productsStore.allProducts
+  let products = productsStore.allProducts
+
+  // Filter by category
+  if (selectedCategory.value) {
+    products = products.filter(p => p.category_id === selectedCategory.value.id)
   }
-  return productsStore.allProducts.filter(p => p.category_id === selectedCategory.value.id)
+
+  // Filter by search query
+  if (searchQuery.value.trim()) {
+    const query = searchQuery.value.toLowerCase().trim()
+    products = products.filter(p => 
+      p.description.toLowerCase().includes(query)
+    )
+  }
+
+  return products
 })
 
 const availableTables = computed(() => {
@@ -306,6 +366,11 @@ const clearOrder = () => {
   orderItems.value = []
 }
 
+const clearFilters = () => {
+  searchQuery.value = ''
+  selectedCategory.value = null
+}
+
 const sendOrder = async () => {
   if (!selectedTable.value || orderItems.value.length === 0) return
   
@@ -335,6 +400,8 @@ const startNewOrder = () => {
   orderItems.value = []
   selectedTable.value = null
   showSuccessModal.value = false
+  searchQuery.value = ''
+  selectedCategory.value = null
 }
 
 const goToDashboard = () => {
