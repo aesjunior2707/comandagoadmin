@@ -9,7 +9,7 @@
           </NuxtLink>
           <div>
             <h1 class="text-xl font-semibold text-gray-900">Mesa {{ tableInfo?.description }}</h1>
-            <p class="text-sm text-gray-600">{{ currentOrders.length }} {{ currentOrders.length === 1 ? 'item' : 'itens' }} no pedido</p>
+            <p class="text-sm text-gray-600">{{ orders.length }} {{ orders.length === 1 ? 'item' : 'itens' }} no pedido</p>
           </div>
         </div>
         <div class="flex items-center space-x-3">
@@ -34,7 +34,7 @@
               <div class="flex justify-between items-center">
                 <h2 class="text-xl font-semibold text-gray-900">Itens do Pedido</h2>
                 <button 
-                  v-if="currentOrders.length > 0"
+                  v-if="orders.length > 0"
                   @click="showRemoveAllModal = true" 
                   class="text-red-600 hover:text-red-700 text-sm font-medium"
                 >
@@ -45,7 +45,7 @@
 
             <div class="p-6">
               <!-- Empty State -->
-              <div v-if="currentOrders.length === 0" class="text-center py-12">
+              <div v-if="orders.length === 0" class="text-center py-12">
                 <ShoppingCartIcon class="w-16 h-16 text-gray-300 mx-auto mb-4" />
                 <h3 class="text-lg font-medium text-gray-900 mb-2">Nenhum item na mesa</h3>
                 <p class="text-gray-600 mb-6">Esta mesa não possui itens no momento</p>
@@ -58,7 +58,7 @@
               <!-- Order Items -->
               <div v-else class="space-y-4">
                 <div
-                  v-for="item in currentOrders"
+                  v-for="item in orders"
                   :key="item.id"
                   class="bg-gray-50 rounded-lg p-4 hover:bg-gray-100 transition-colors"
                 >
@@ -273,6 +273,8 @@ definePageMeta({
 const route = useRoute()
 const tableId = route.params.id
 
+const tablesStore = useTablesStore();
+
 // State
 const tableInfo = ref(null)
 const currentOrders = ref([])
@@ -282,33 +284,9 @@ const showSuccessModal = ref(false)
 const paymentMethod = ref('cash')
 const isProcessingPayment = ref(false)
 
-// Mock data - replace with actual API calls
-const mockOrders = [
-  {
-    id: 1,
-    product_description: 'Hambúrguer Artesanal',
-    quantity: 2,
-    unit_price: 25.90,
-    total_price: 51.80,
-    created_at: new Date(Date.now() - 30 * 60 * 1000).toISOString()
-  },
-  {
-    id: 2,
-    product_description: 'Batata Frita Grande',
-    quantity: 1,
-    unit_price: 15.50,
-    total_price: 15.50,
-    created_at: new Date(Date.now() - 25 * 60 * 1000).toISOString()
-  },
-  {
-    id: 3,
-    product_description: 'Refrigerante 350ml',
-    quantity: 2,
-    unit_price: 6.00,
-    total_price: 12.00,
-    created_at: new Date(Date.now() - 20 * 60 * 1000).toISOString()
-  }
-]
+const orders = computed(() => {
+  return tablesStore.allOrders
+})
 
 // Computed
 const subtotal = computed(() => {
@@ -393,8 +371,5 @@ onMounted(async () => {
     description: tableId,
     status: 'occupied'
   }
-  
-  // Mock current orders - replace with actual API call
-  currentOrders.value = [...mockOrders]
 })
 </script>

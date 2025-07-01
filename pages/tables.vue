@@ -70,22 +70,20 @@
           </div>
 
           <div class="flex gap-3">
-            <NuxtLink
-              :to="`/table/${table.id}`"
-              @click.stop
+            <button
               v-if="table.status == 'occupied'"
-              class="flex-1 text-xs py-2 px-3 bg-gray-100 hover:bg-gray-200 rounded font-medium transition-colors text-center"
+              @click="navigateToTable(table.id)"
+              class="flex-1 text-xs py-2 px-3 bg-red-100 hover:bg-red-200 rounded font-medium transition-colors text-center"
             >
               Visualizar Mesa
-            </NuxtLink>
-            <NuxtLink
-              :to="`/pos?table=${table.id}`"
-              @click.stop
+            </button>
+            <button
               v-if="table.status == 'available'"
+              @click.stop="navigateToPOS(table.id)"
               class="flex-1 text-xs py-2 px-3 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 rounded font-medium transition-colors text-center"
             >
               Iniciar Pedido
-            </NuxtLink>
+            </button>
           </div>
         </div>
       </div>
@@ -166,6 +164,14 @@ const getStatusBadgeClass = (status) => {
     occupied: "bg-red-100 text-red-800",
   };
   return classes[status] || "bg-gray-100 text-gray-800";
+};
+
+const navigateToTable = async(tableId) => {
+   tablesStore.selectTable(tableId).then(() => {
+    navigateTo(`/table/${tableId}`);
+   }).catch((error) => {
+    console.error("Error navigating to table:", error);
+  });
 };
 
 const addTable = async () => {

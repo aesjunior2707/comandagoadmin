@@ -17,6 +17,7 @@ interface RestaurantInfo {
   updated_at: string
 }
 
+
 interface RestaurantStats {
   totalTables: number
   totalProducts: number
