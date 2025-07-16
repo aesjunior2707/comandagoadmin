@@ -283,7 +283,7 @@ definePageMeta({
 const route = useRoute()
 const productsStore = useProductsStore()
 const tablesStore = useTablesStore()
-
+const authStore = useAuthStore()
 // State
 const selectedCategory = ref(null)
 const selectedTable = ref(null)
@@ -385,17 +385,34 @@ const sendOrder = async () => {
   isLoading.value = true
   
   try {
-    // Simulate API call to send order
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
-    // Here you would make the actual API call to send the order
-    console.log('Sending order:', {
-      table: selectedTable.value,
-      items: orderItems.value,
-      total: total.value
+    const orders = []
+
+    orderItems.value.forEach(order => {
+      if (typeof order === 'object' && order !== null) {
+      orders.push({
+        id: `ORD-${Date.now()}-${Math.random()}`,
+        company_id: authStore.currentUser.company_id,
+        table_id: selectedTable.value.id,
+        user_id: authStore.currentUser.id,
+        product_id: order.id,
+        product_description: order.description,
+        unit_price: order.price,
+        quantity: order.quantity,
+        total_price: (Number(order.price) * order.quantity),
+        user_name: authStore.currentUser.name,
+        status: 'peding'
+      });
+      }
+    });
+
+    tablesStore.new_order(orders
+    ).then(() => {
+      showSuccessModal.value = true
+    }).catch(error => {
+      console.error('Error sending order:', error)
     })
-    
-    showSuccessModal.value = true
+
+  
   } catch (error) {
     console.error('Error sending order:', error)
     // Handle error (show error message)

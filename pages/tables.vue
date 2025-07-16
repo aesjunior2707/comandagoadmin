@@ -166,6 +166,14 @@ const getStatusBadgeClass = (status) => {
   return classes[status] || "bg-gray-100 text-gray-800";
 };
 
+const navigateToPOS = async (tableId) => {
+  try {
+    navigateTo(`/pos`);
+  } catch (error) {
+    console.error("Error navigating to POS:", error);
+  }
+};
+
 const navigateToTable = async(tableId) => {
    tablesStore.selectTable(tableId).then(() => {
     navigateTo(`/table/${tableId}`);

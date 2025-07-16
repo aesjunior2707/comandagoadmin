@@ -405,7 +405,7 @@ declare global {
   export type { Component, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from '../../node_modules/vue'
   import('../../node_modules/vue')
   // @ts-ignore
-  export type { Order } from '../../stores/tables'
+  export type { Order, SalesRecord } from '../../stores/tables'
   import('../../stores/tables')
 }
 // for vue template auto import

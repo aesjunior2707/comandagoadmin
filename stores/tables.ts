@@ -36,6 +36,24 @@ export interface Order {
   user_name: string
 }
 
+export interface SalesRecord {
+  id: string,
+  company_id: string,
+  table_id: string,
+  payment_type: string,
+  itens: [],
+  user_id: string,
+  user_name: string,
+  total_amount: number,
+  type_customer : string,
+  identification_nfce: string,
+  issues_invoice : boolean,
+  created_at: string,
+  updated_at: string
+}
+
+
+
 export const useTablesStore = defineStore('tables', {
   state: (): TableState => ({
     tables: [
@@ -66,7 +84,7 @@ export const useTablesStore = defineStore('tables', {
     async selectTable(mesaId: string) {
       try {
         this.ItemsConfirmed = []
-        
+
         const res = await api.request('GET', `company-orders/${useAuthStore().user?.company_id}?table=${mesaId}`)
 
         const responseData = res.data as { data: Order[] };
@@ -141,6 +159,34 @@ export const useTablesStore = defineStore('tables', {
         console.error('Error listing tables:', error)
         return { success: false, error: error.message }
       }
-    }
+    },
+
+    async new_order(Orders: Order[]) {
+      try {
+        await api.request('POST', `company-orders/`, Orders)
+
+        console.log('New order created successfully:', Orders)
+        this.ItemsConfirmed = []
+
+        return { success: true }
+      }
+      catch (error: any) {
+        console.error('Error creating new order:', error)
+        return { success: false, error: error.message }
+      }
+    },
+
+    async create_sales_record(sales: SalesRecord) {
+      try {
+        const res = await api.request('POST', `company-salesrecords/`, sales)
+        return res.data
+      } catch (error) {
+        console.error('Error creating sales record:', error)
+        throw error
+      }
+
+    },
+
+    
   }
 })

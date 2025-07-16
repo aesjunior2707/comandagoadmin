@@ -147,6 +147,25 @@ export const useRestaurantStore = defineStore('restaurant', {
       } finally {
         this.isLoading = false
       }
-    }
+    },
+
+    async clear_all_table(tableId: string) {
+      this.isLoading = true
+      try {
+        const res = await api.request('DELETE', `company-orders/${useAuthStore().user?.company_id}/table/${tableId}`)
+        
+        if (res.data && res.data.success) {
+          // Optionally, you can update the state or perform other actions
+          return { success: true }
+        } else {
+          return { success: false, error: 'Failed to clear table' }
+        }
+      } catch (error: any) {
+        return { success: false, error: error.message }
+      } finally {
+        this.isLoading = false
+      }
+    },
+
   }
 })
