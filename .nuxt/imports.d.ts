@@ -33,7 +33,7 @@ export { useAuthStore } from '../stores/auth';
 export { useDashboardStore } from '../stores/dashboard';
 export { useProductsStore } from '../stores/products';
 export { useRestaurantStore } from '../stores/restaurant';
-export { useTablesStore } from '../stores/tables';
+export { useTablesStore, Order, SalesRecord } from '../stores/tables';
 export { useWaitersStore } from '../stores/waiters';
 export { defineStore, acceptHMRUpdate, usePinia, storeToRefs } from '../node_modules/@pinia/nuxt/dist/runtime/composables';
 export { persistedState } from '../node_modules/@pinia-plugin-persistedstate/nuxt/dist/runtime/storages';

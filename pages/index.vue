@@ -11,10 +11,10 @@
           <ArrowPathIcon class="w-4 h-4 mr-2" :class="{ 'animate-spin': dashboardStore.isLoading }" />
           Atualizar
         </button>
-        <button class="btn-primary">
+        <NuxtLink to="/pos" class="btn-primary">
           <PlusIcon class="w-4 h-4 mr-2" />
           Novo Pedido
-        </button>
+        </NuxtLink>
       </div>
     </div>
 

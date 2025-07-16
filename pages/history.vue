@@ -27,7 +27,7 @@
           </div>
           <div>
             <p class="text-sm font-medium text-gray-600 mb-1">Faturamento de Hoje</p>
-            <p class="text-2xl font-bold text-gray-900">R${{ todayRevenue }}</p>
+            <p class="text-2xl font-bold text-gray-900">R${{ dashboardStore.todayRevenue.toFixed(2) }}</p>
           </div>
         </div>
       </div>
@@ -39,40 +39,13 @@
           </div>
           <div>
             <p class="text-sm font-medium text-gray-600 mb-1">Pedidos de Hoje</p>
-            <p class="text-2xl font-bold text-gray-900">{{ todayOrders }}</p>
+            <p class="text-2xl font-bold text-gray-900">{{  dashboardStore.dashboardStats.todayOrders }}</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Filters -->
-    <div class="card mb-8">
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div class="form-group">
-          <label class="block text-sm font-medium text-gray-700 mb-2">Período de Datas</label>
-          <select v-model="selectedDateRange" class="input-field">
-            <option value="today">Today</option>
-            <option value="week">This Week</option>
-            <option value="month">This Month</option>
-            <option value="custom">Custom Range</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="block text-sm font-medium text-gray-700 mb-2">Mesas</label>
-          <select v-model="selectedTable" class="input-field">
-            <option value="">All Tables</option>
-            <option v-for="table in availableTables" :key="table" :value="table">Table {{ table }}</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="block text-sm font-medium text-gray-700 mb-2">Garçons</label>
-          <select v-model="selectedWaiter" class="input-field">
-            <option value="">All Waiters</option>
-            <option v-for="waiter in availableWaiters" :key="waiter" :value="waiter">{{ waiter }}</option>
-          </select>
-        </div>
-      </div>
-    </div>
+
 
     <!-- Orders History Table -->
     <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -168,6 +141,8 @@ const itemsPerPage = ref(10)
 // Sample data
 const orders = computed(() => useRestaurantStore().restaurantHistory)
 
+const dashboardStore = computed(() => useDashboardStore())
+
 const availableTables = computed(() => [...new Set(orders.value.map(o => o.table))].sort((a, b) => a - b))
 const availableWaiters = computed(() => [...new Set(orders.value.map(o => o.waiter))].sort())
 
@@ -257,9 +232,9 @@ const exportData = () => {
   // Implement data export functionality
 }
 
-const refreshData = () => {
-  console.log('Refresh data')
-  // Implement data refresh functionality
+const refreshData = async () => {
+   dashboardStore.value.fetchDashboardData()
+   useRestaurantStore().list_history()
 }
 
 // Reset pagination when filters change
@@ -270,5 +245,6 @@ watch([selectedTable, selectedWaiter, selectedStatus, selectedDateRange], () => 
 onMounted(async() => {
   console.log("Fetching restaurant history data...")
   await useRestaurantStore().list_history()
+  dashboardStore.value.fetchDashboardData()
 })
 </script>
