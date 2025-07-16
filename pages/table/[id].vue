@@ -250,6 +250,72 @@
           </select>
         </div>
 
+        <!-- Invoice Options -->
+        <div class="space-y-4 mb-6">
+          <div class="flex items-center">
+            <input
+              id="issue-invoice"
+              v-model="issueInvoice"
+              type="checkbox"
+              class="h-4 w-4 text-emerald-600 focus:ring-emerald-500 border-gray-300 rounded transition-colors"
+            />
+            <label for="issue-invoice" class="ml-3 block text-sm font-medium text-gray-700">
+              Emitir Nota Fiscal
+            </label>
+          </div>
+
+          <!-- Invoice Details (shown when checkbox is checked) -->
+          <Transition name="fade">
+            <div v-if="issueInvoice" class="space-y-4 pl-7 border-l-2 border-emerald-100">
+              <!-- Customer Type -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Tipo de Cliente
+                </label>
+                <div class="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    @click="customerType = 'individual'"
+                    class="px-4 py-2 text-sm font-medium rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    :class="customerType === 'individual' 
+                      ? 'bg-emerald-50 border-emerald-300 text-emerald-700 shadow-sm' 
+                      : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'"
+                  >
+                    Pessoa Física
+                  </button>
+                  <button
+                    type="button"
+                    @click="customerType = 'company'"
+                    class="px-4 py-2 text-sm font-medium rounded-lg border transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                    :class="customerType === 'company' 
+                      ? 'bg-emerald-50 border-emerald-300 text-emerald-700 shadow-sm' 
+                      : 'bg-white border-gray-300 text-gray-700 hover:bg-gray-50'"
+                  >
+                    Pessoa Jurídica
+                  </button>
+                </div>
+              </div>
+
+              <!-- Document Field -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Documento
+                </label>
+                <input
+                  v-model="customerDocument"
+                  type="text"
+                  :placeholder="customerType === 'individual' ? 'CPF' : 'CNPJ'"
+                  class="input-field"
+                  :maxlength="customerType === 'individual' ? 14 : 18"
+                />
+                <p class="mt-1 text-xs text-gray-500">
+                  {{ customerType === 'individual' ? 'Digite o CPF do cliente' : 'Digite o CNPJ da empresa' }}
+                </p>
+              </div>
+            </div>
+          </Transition>
+        </div>
+
         <div class="flex gap-3">
           <button
             @click="showPaymentModal = false"
@@ -364,6 +430,9 @@ const showRemoveAllModal = ref(false);
 const showSuccessModal = ref(false);
 const paymentMethod = ref("cash");
 const isProcessingPayment = ref(false);
+const issueInvoice = ref(false);
+const customerType = ref("individual");
+const customerDocument = ref("");
 
 const orders = computed(() => {
   return tablesStore.allOrders;
@@ -432,9 +501,9 @@ const processPayment = async () => {
       total_amount: total.value,
       user_id: authStore.currentUser.id,
       user_name: authStore.currentUser.name,
-      issues_invoice: false,
-      identification_nfce: null,
-      type_customer: null,
+      issues_invoice: issueInvoice.value,
+      identification_nfce: issueInvoice.value ? customerDocument.value : null,
+      type_customer: issueInvoice.value ? customerType.value : null,
     };
 
     tablesStore
@@ -462,6 +531,15 @@ const processPayment = async () => {
 const goToTables = () => {
   navigateTo("/tables");
 };
+
+// Reset invoice options when modal closes
+watch(showPaymentModal, (newValue) => {
+  if (!newValue) {
+    issueInvoice.value = false;
+    customerType.value = "individual";
+    customerDocument.value = "";
+  }
+});
 
 // Initialize data
 onMounted(async () => {
